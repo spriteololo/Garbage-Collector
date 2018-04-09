@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">ui</string>
+    <string name="authors">Behel Andrew\nKhilkovich Dmitry</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="drawer_open">Drawer Open</string>
+    <string name="drawer_close">Drawer Close</string>
+
+    <string name="home">Status</string>
+    <string name="login">Login</string>
+    <string name="test">Test</string>
+
+    <string name="manual_control">Manual Control</string>
+    <string name="moves_recording">Moves Recording</string>
+
+    <string name="auto_moving">Auto Moving</string>
+
+
+    <string name="no_network_connection">Network connection error</string>
+    <string name="no_connection_to_robot">Robot connection error</string>
+    <string name="connecting_to_robot">Connecting to robot…</string>
+    <string name="connecting_to_network">Connecting to network…</string>
+    <string name="connected_to_robot">Robot is connected!</string>
+    <string name="connected_to_network">Network is connected!</string>
+    <string name="robot_is_disconnecting">Robot is disconnecting…</string>
+    <string name="network_is_disconnecting">Network is disconnecting…</string>
+</resources>

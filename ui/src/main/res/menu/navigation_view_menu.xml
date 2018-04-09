@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/login_group"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_login"
+            android:icon="@drawable/ic_face_black"
+            android:title="@string/login" />
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:title="@string/home"
+            android:checked="true"/>
+    </group>
+
+    <group
+        android:id="@+id/user_group"
+        android:checkableBehavior="single"
+        android:visible="true"> <!--TODO-->
+        <item
+            android:id="@+id/manual_control"
+            android:title="@string/manual_control" />
+
+        <item
+            android:id="@+id/auto_moving"
+            android:title="@string/auto_moving" />
+    </group>
+
+    <group
+        android:id="@+id/admin_group"
+        android:checkableBehavior="single"
+        android:visible="false">
+        <item
+            android:id="@+id/moves_recording"
+            android:title="@string/moves_recording" />
+    </group>
+
+</menu>

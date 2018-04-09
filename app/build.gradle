@@ -1,0 +1,77 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.github.ben-manes.versions'
+
+android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
+    defaultConfig {
+        applicationId versions.appId
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+
+        versionCode 1
+        versionName "1.0"
+
+        vectorDrawables.useSupportLibrary = true
+
+        renderscriptTargetApi versions.targetApi
+        renderscriptSupportModeEnabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    //UI module
+    compile project(':ui')
+
+    compile libraries.expandableTextView
+
+    //Moxy lib
+    compile libraries.moxy
+    annotationProcessor libraries.moxyCompiler
+
+    //Dagger 2 lib
+    compile libraries.dagger
+    annotationProcessor libraries.daggerCompiler
+
+    //Retrofit2 lib
+    compile libraries.retrofit
+    compile libraries.retrofitGsonConverter
+    compile libraries.retrofitAdapter
+
+    //ButterKnife lib
+    compile libraries.butterKnife
+    annotationProcessor libraries.butterKnifeCompiler
+
+    //rxJava/Android
+    compile libraries.rxJava
+    compile libraries.rxAndroid
+
+    //circularReveal
+    compile libraries.circularReveal
+
+    compile libraries.glide
+    annotationProcessor libraries.glideCompiler
+
+    //cicerone
+    compile libraries.cicerone
+
+    //expandableLayout
+    compile libraries.expandableLayout
+
+    compile libraries.virtualJoystick
+
+
+}
