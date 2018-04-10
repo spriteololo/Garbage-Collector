@@ -21,6 +21,7 @@ public class HomePresenter extends BaseInternetMvpPresenter<HomeView> implements
 
     public HomePresenter() {
         BaseApplication.getApplicationComponent().inject(this);
+
     }
 
     @Override

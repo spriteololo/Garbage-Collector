@@ -35,16 +35,6 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         previousConnection = currentConnection;
     }
 
-    public boolean checkConnection() {
-        return currentConnection;
-    }
-
-    public void updateInfo() {
-        if(!currentConnection) {
-            listener.networkUnavailable();
-        }
-    }
-
     private void notifyState() {
         if (listener == null) {
             return;
@@ -59,6 +49,21 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 
     public void addListener(@NonNull final NetworkStateReceiverListener listener) {
         this.listener = listener;
+    }
+
+    public void updateInfo(Context context) {
+        final ConnectivityManager cm = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (listener == null) {
+            return;
+        }
+        if ((cm != null ? cm.getActiveNetworkInfo() : null)
+                != null && cm.getActiveNetworkInfo().isConnectedOrConnecting()) {
+            listener.networkAvailable();
+        } else {
+            listener.networkUnavailable();
+        }
     }
 
     public interface NetworkStateReceiverListener {

@@ -106,7 +106,7 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
         networkStateReceiver.addListener(this);
         this.registerReceiver(networkStateReceiver,
                 new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-        networkStateReceiver.updateInfo();
+        networkStateReceiver.updateInfo(this);
     }
 
     @Override

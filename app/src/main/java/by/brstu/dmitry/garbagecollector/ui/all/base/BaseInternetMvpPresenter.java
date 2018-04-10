@@ -2,13 +2,13 @@ package by.brstu.dmitry.garbagecollector.ui.all.base;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.arellomobile.mvp.MvpView;
 
-import by.brstu.dmitry.garbagecollector.application.Constants;
+import java.util.concurrent.TimeUnit;
+
 import by.brstu.dmitry.garbagecollector.inject.RequestInterface;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -19,7 +19,7 @@ import okhttp3.ResponseBody;
 public class BaseInternetMvpPresenter<View extends MvpView> extends BaseMvpPresenter<View> {
 
     private boolean isConnected = false;
-
+    private Disposable disposable = null;
     protected boolean isInternetConnection(@NonNull final Context context) {
         final ConnectivityManager cm = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -42,53 +42,48 @@ public class BaseInternetMvpPresenter<View extends MvpView> extends BaseMvpPrese
                                              final RequestInterface requestInterface,
                                              final boolean setOrRemove) {
 
-        final Handler handler = new Handler();
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                requestInterface.checkConnectionToRobot()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<ResponseBody>() {
-                            @Override
-                            public void onSubscribe(final Disposable d) {
+        if (setOrRemove) {
+            requestInterface.checkConnectionToRobot()
+                    .subscribeOn(Schedulers.io())
+                    .debounce(1000, TimeUnit.MILLISECONDS)
+                    .repeat()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<ResponseBody>() {
+                        @Override
+                        public void onSubscribe(final Disposable d) {
+                            disposable = d;
+                        }
 
-                            }
-
-                            @Override
-                            public void onNext(final ResponseBody responseBody) {
-                                if (isConnected) {
+                        @Override
+                        public void onNext(final ResponseBody responseBody) {
+                                /*if (isConnected) {
                                     robotConnectionListener.onConnected();
                                 } else {
                                     isConnected = true;
                                     robotConnectionListener.onConnecting();
-                                }
-                            }
+                                }*/
+                            Log.i("Timer", "Next");
+                        }
 
-                            @Override
-                            public void onError(final Throwable e) {
-                                if (isConnected) {
+                        @Override
+                        public void onError(final Throwable e) {
+                                /*if (isConnected) {
                                     isConnected = false;
                                     robotConnectionListener.onDisconnecting();
                                 } else {
                                     robotConnectionListener.onDisconnected();
-                                }
-                            }
+                                }*/
+                            Log.i("Timer", "Err");
+                        }
 
-                            @Override
-                            public void onComplete() {
+                        @Override
+                        public void onComplete() {
 
-                            }
-                        });
-                Looper.loop();
-            }
-        };//TODO
+                        }
+                    });
 
-        if(setOrRemove) {
-            handler.postDelayed(runnable, Constants.CONNECTION_TO_ROBOT_DELAY_CHECK);
         } else {
-            handler.removeCallbacks(runnable);
+            disposable.dispose();
         }
     }
 
