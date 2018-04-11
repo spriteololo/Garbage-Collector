@@ -28,9 +28,9 @@ public class RetrofitModule {
     @Singleton
     Retrofit provideRetrofit(@NonNull final OkHttpClient okHttpClient) {
         final OkHttpClient.Builder okHttpBuilder = okHttpClient.newBuilder();
-       okHttpBuilder.connectTimeout(500, TimeUnit.MILLISECONDS)
-                .readTimeout(500, TimeUnit.MILLISECONDS)
-                .writeTimeout(500, TimeUnit.MILLISECONDS)
+        okHttpBuilder.connectTimeout(5000, TimeUnit.MILLISECONDS)
+                .readTimeout(5000, TimeUnit.MILLISECONDS)
+                .writeTimeout(5000, TimeUnit.MILLISECONDS)
                 .build();
 
         return new Retrofit.Builder()

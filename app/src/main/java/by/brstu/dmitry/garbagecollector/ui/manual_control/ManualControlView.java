@@ -5,6 +5,4 @@ import com.arellomobile.mvp.MvpView;
 import by.brstu.dmitry.garbagecollector.application.InternetConnectionState.ConnectionType;
 
 public interface ManualControlView extends MvpView {
-    void connectionState(@ConnectionType int connectingToRobotState);
-
 }

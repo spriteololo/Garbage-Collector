@@ -250,10 +250,4 @@ public class ManualControlFragment extends BaseMvpFragment implements View.OnCli
             Snackbar.make(view, "High accuracy", Snackbar.LENGTH_LONG).show();
         }
     }
-
-
-    @Override
-    public void connectionState(@ConnectionType final int connectingToRobotState) {
-        ((BaseActivity)getActivity()).connectionState(connectingToRobotState);
-    }
 }

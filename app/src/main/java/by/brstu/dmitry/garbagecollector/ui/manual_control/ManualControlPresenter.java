@@ -24,7 +24,7 @@ import okhttp3.ResponseBody;
  */
 
 @InjectViewState
-public class ManualControlPresenter extends BaseInternetMvpPresenter<ManualControlView> implements BaseInternetMvpPresenter.RobotConnectionListener {
+public class ManualControlPresenter extends BaseInternetMvpPresenter<ManualControlView> {
 
     @Inject
     RequestInterface requestInterface;
@@ -105,32 +105,5 @@ public class ManualControlPresenter extends BaseInternetMvpPresenter<ManualContr
 
     }
 
-    @Override
-    public void onConnecting() {
-        getViewState().connectionState(InternetConnectionState.ConnectionType.CONNECTING_TO_ROBOT);
-    }
 
-    @Override
-    public void onConnected() {
-        getViewState().connectionState(InternetConnectionState.ConnectionType.CONNECTED_TO_ROBOT);
-    }
-
-    @Override
-    public void onDisconnecting() {
-        if (isInternetConnection(context)) {
-            getViewState().connectionState(InternetConnectionState.ConnectionType.NO_NETWORK_CONNECTION);
-        } else {
-            getViewState().connectionState(InternetConnectionState.ConnectionType.ROBOT_DISCONNECTING);
-        }
-    }
-
-    @Override
-    public void onDisconnected() {
-        if (isInternetConnection(context)) {
-            getViewState().connectionState(InternetConnectionState.ConnectionType.NO_NETWORK_CONNECTION);
-        } else {
-            getViewState().connectionState(InternetConnectionState.ConnectionType.NO_CONNECTION_TO_ROBOT);
-        }
-
-    }
 }

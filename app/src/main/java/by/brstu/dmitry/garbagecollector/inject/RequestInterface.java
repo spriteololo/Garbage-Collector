@@ -8,7 +8,7 @@ import retrofit2.http.Query;
 
 public interface RequestInterface {
 
-    @GET("f")
+    @GET("m")
     Observable<ResponseBody> checkConnectionToRobot(); //forward sensor
 
     @GET("m")

@@ -7,7 +7,9 @@ public class Constants {
     public static final short CONNECTION_TO_ROBOT_DELAY_CHECK = 1000;
 
     public interface BaseApi {
-        String BASE_URL = "http://192.168.43.3/"; //TODO
+       // String BASE_URL_UNCOMMENT = "http://192.168.43.3/"; //TODO
+        String BASE_URL = "http://google.com/"; //TODO
+
     }
 
 
@@ -29,7 +31,7 @@ public class Constants {
     }
 
     public interface NetworkingConfig {
-        int TIMEOUT = 0;
+        int TIMEOUT = 5000;
     }
 
 }
