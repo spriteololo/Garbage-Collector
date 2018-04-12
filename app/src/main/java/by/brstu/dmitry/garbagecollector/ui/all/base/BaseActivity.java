@@ -81,21 +81,31 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private GradientDrawable createGradient(@ConnectionType final int type) {
         int[] colors = new int[3];
+        final int good = -16760832; //FF004000
+        final int bad = -12582912; //#FF400000
 
-        if (type == ConnectionType.NO_NETWORK_CONNECTION || type == ConnectionType.NETWORK_DISCONNECTING) {
-            colors = new int[]{Color.RED, Color.BLACK, Color.BLACK};
-        }
-
-        if(type == ConnectionType.CONNECTED_TO_NETWORK || type == ConnectionType.CONNECTING_TO_NETWORK) {
-            colors = new int[]{Color.GREEN, Color.BLACK, Color.BLACK};
+        if(type == ConnectionType.CONNECTED_TO_NETWORK) {
+            colors = new int[]{good, Color.BLACK, Color.BLACK};
         }
 
         if(type == ConnectionType.CONNECTING_TO_ROBOT ) {
-            colors = new int[]{Color.GREEN, Color.GREEN, Color.BLACK};
+            colors = new int[]{good, good, Color.BLACK};
         }
 
         if(type == ConnectionType.CONNECTED_TO_ROBOT ) {
-            colors = new int[]{Color.GREEN, Color.GREEN, Color.GREEN};
+            colors = new int[]{good, good, good};
+        }
+
+        if(type == ConnectionType.ROBOT_DISCONNECTING) {
+            colors = new int[]{bad, bad, bad};
+        }
+
+        if(type == ConnectionType.NO_CONNECTION_TO_ROBOT) {
+            colors = new int[]{bad, bad, Color.BLACK};
+        }
+
+        if (type == ConnectionType.NO_NETWORK_CONNECTION) {
+            colors = new int[]{bad, Color.BLACK, Color.BLACK};
         }
 
         final GradientDrawable gd = new GradientDrawable(

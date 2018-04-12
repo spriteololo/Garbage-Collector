@@ -1,38 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:orientation="vertical"
-    android:paddingTop="56dp">
 
-    <Button
-        android:id="@+id/btn_start_gyro"
+    android:orientation="vertical">
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="start"/>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/mmm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/joystickView"
-        android:layout_centerHorizontal="true"
-        android:text="@string/manual_control" />
+        <RelativeLayout
+            android:id="@+id/manual_container"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@id/manual_control_view_pager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <io.github.controlwear.virtual.joystick.android.JoystickView xmlns:custom="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/joystickView"
-        android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/mmm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        custom:JV_autoReCenterButton="true"
-        custom:JV_backgroundColor="#009688"
-        custom:JV_borderColor="#00796B"
-        custom:JV_borderWidth="4dp"
-        custom:JV_buttonColor="#FF6E40"
-        custom:JV_buttonSizeRatio="15%"
-        custom:JV_fixedCenter="true" />
+                android:text="@string/manual_control" />
 
-</RelativeLayout>
+        </RelativeLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/manual_control_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/manual_container">
+
+            <android.support.v4.view.PagerTabStrip
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+            </android.support.v4.view.PagerTabStrip>
+
+        </android.support.v4.view.ViewPager>
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</FrameLayout>

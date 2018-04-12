@@ -8,10 +8,9 @@ import android.util.Log;
 
 import com.arellomobile.mvp.MvpView;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import by.brstu.dmitry.garbagecollector.application.Constants;
 import by.brstu.dmitry.garbagecollector.inject.RequestInterface;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -23,7 +22,6 @@ public class BaseInternetMvpPresenter<View extends MvpView> extends BaseMvpPrese
 
     private short connection = 0;
     private short disconnection = 0;
-    private boolean isConnectedToInternet = false;
     private RobotConnectionListener robotConnectionListener;
 
 
@@ -45,72 +43,57 @@ public class BaseInternetMvpPresenter<View extends MvpView> extends BaseMvpPrese
         short onDisconnecting();
     }
 
-    protected void setListener(final RobotConnectionListener robotConnectionListener) {
+    protected void setRobotConnectionListener(final RobotConnectionListener robotConnectionListener) {
         this.robotConnectionListener = robotConnectionListener;
-    }
-    protected void networkState(final boolean b) {
-        this.isConnectedToInternet = b;
-
     }
 
     protected class ConnectionToRobot extends AsyncTask<Void, Void, Void> {
         private final RequestInterface requestInterface;
-        Timer timer;
 
         public ConnectionToRobot(RequestInterface requestInterface) {
             this.requestInterface = requestInterface;
-            timer = new Timer();
         }
 
         @Override
         protected Void doInBackground(final Void... voids) {
 
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    requestInterface.checkConnectionToRobot()
-                            .subscribeOn(Schedulers.io())
-                            .debounce(5000, TimeUnit.MILLISECONDS)
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Observer<ResponseBody>() {
-                                @Override
-                                public void onSubscribe(final Disposable d) {
-                                }
+            while (true) {
+                requestInterface.checkConnectionToRobot()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<ResponseBody>() {
+                            @Override
+                            public void onSubscribe(final Disposable d) {
+                            }
 
-                                @Override
-                                public void onNext(final ResponseBody responseBody) {
-                                    if (isConnectedToInternet) {
-                                        action(true);
-                                    }
-                                    Log.i("Timer", "Next");
-                                }
+                            @Override
+                            public void onNext(final ResponseBody responseBody) {
+                                action(true);
+                                Log.i("Timer", "Next");
+                            }
 
-                                @Override
-                                public void onError(final Throwable e) {
-                                    if (isConnectedToInternet) {
-                                        action(false);
-                                    } else {
-                                        onNext(null);
-                                    }
-                                    Log.i("Timer", "Err");
-                                }
+                            @Override
+                            public void onError(final Throwable e) {
+                                action(false);
+                                Log.i("Timer", "Err");
+                            }
 
-                                @Override
-                                public void onComplete() {
+                            @Override
+                            public void onComplete() {
 
-                                }
-                            });
+                            }
+                        });
+
+                if(isCancelled() && disconnection > 1) return null;
+
+                try {
+                    TimeUnit.MILLISECONDS.sleep(Constants.CONNECTION_TO_ROBOT_DELAY_CHECK);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            };
-            timer.scheduleAtFixedRate(timerTask, 0, 2000);
 
-            return null;
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            timer.cancel();
+                if(isCancelled() && disconnection > 1) return null;
+            }
         }
     }
 

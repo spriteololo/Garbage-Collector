@@ -16,6 +16,8 @@
 
     <string name="manual_control">Manual Control</string>
     <string name="moves_recording">Moves Recording</string>
+    <string name="joystick">Manual/joystick</string>
+    <string name="stels">Manual/stels</string>
 
     <string name="auto_moving">Auto Moving</string>
 

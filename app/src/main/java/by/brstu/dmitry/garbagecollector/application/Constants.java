@@ -27,6 +27,8 @@ public class Constants {
         public static final String AUTO_MOVING_SCREEN = "auto_moving_screen_fragment";
 
         public static final String MOVES_RECORDING_SCREEN = "moves_recording_screen_fragment";
+        public static final String MANUAL_JOYSTICK_SCREEN = "Joystick mode";
+        public static final String MANUAL_STELS_SCREEN = "Airplane mode";
 
     }
 
@@ -34,4 +36,7 @@ public class Constants {
         int TIMEOUT = 5000;
     }
 
+    public class Extras {
+        public static final String POSITION_KEY = "Position";
+    }
 }

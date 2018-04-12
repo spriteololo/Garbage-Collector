@@ -2,26 +2,19 @@ package by.brstu.dmitry.garbagecollector.ui.manual_control;
 
 import android.content.Context;
 import android.util.Log;
-import android.util.Pair;
 
 import com.arellomobile.mvp.InjectViewState;
 
 import javax.inject.Inject;
 
 import by.brstu.dmitry.garbagecollector.application.BaseApplication;
-import by.brstu.dmitry.garbagecollector.application.InternetConnectionState;
 import by.brstu.dmitry.garbagecollector.inject.RequestInterface;
 import by.brstu.dmitry.garbagecollector.ui.all.base.BaseInternetMvpPresenter;
-import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpPresenter;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
-
-/**
- * Created by Dmitry on 03.03.2018.
- */
 
 @InjectViewState
 public class ManualControlPresenter extends BaseInternetMvpPresenter<ManualControlView> {
@@ -106,4 +99,9 @@ public class ManualControlPresenter extends BaseInternetMvpPresenter<ManualContr
     }
 
 
+    public void stelsWheel(final boolean isRightWheel, final int value) {
+        if(isRightWheel) {
+            //TODO
+        }
+    }
 }

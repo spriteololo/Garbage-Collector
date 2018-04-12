@@ -21,11 +21,11 @@ public class HomePresenter extends BaseInternetMvpPresenter<HomeView> implements
     @Inject
     Context context;
 
+    private ConnectionToRobot connectionToRobot;
+
     HomePresenter() {
         BaseApplication.getApplicationComponent().inject(this);
-        setListener(this);
-        ConnectionToRobot connectionToRobot = new ConnectionToRobot(requestInterface);
-        connectionToRobot.execute();
+        setRobotConnectionListener(this);
     }
 
     @Override
@@ -43,9 +43,9 @@ public class HomePresenter extends BaseInternetMvpPresenter<HomeView> implements
     @Override
     public short onDisconnecting() {
         if (isInternetConnection(context)) {
-            getViewState().connectionState(InternetConnectionState.ConnectionType.NO_NETWORK_CONNECTION);
-        } else {
             getViewState().connectionState(InternetConnectionState.ConnectionType.ROBOT_DISCONNECTING);
+        } else {
+            getViewState().connectionState(InternetConnectionState.ConnectionType.NO_NETWORK_CONNECTION);
         }
         return 1;
     }
@@ -53,15 +53,22 @@ public class HomePresenter extends BaseInternetMvpPresenter<HomeView> implements
     @Override
     public short onDisconnected() {
         if (isInternetConnection(context)) {
-            getViewState().connectionState(InternetConnectionState.ConnectionType.NO_NETWORK_CONNECTION);
-        } else {
             getViewState().connectionState(InternetConnectionState.ConnectionType.NO_CONNECTION_TO_ROBOT);
+        } else {
+            getViewState().connectionState(InternetConnectionState.ConnectionType.NO_NETWORK_CONNECTION);
         }
 
         return 1;
     }
 
     public void networkStateChanged(final boolean b) {
-        networkState(b);
+        if (b) {
+            connectionToRobot = new ConnectionToRobot(requestInterface);
+            connectionToRobot.execute();
+        } else {
+            if(connectionToRobot != null) {
+                connectionToRobot.cancel(false);
+            }
+        }
     }
 }
