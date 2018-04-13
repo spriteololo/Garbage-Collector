@@ -12,6 +12,7 @@ import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlPresenter;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.joystick_mode.JoystickFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.stels_mode.StelsFragment;
+import by.brstu.dmitry.garbagecollector.ui.manual_control.stels_mode.StelsPresenter;
 import dagger.Component;
 
 @Singleton
@@ -29,4 +30,6 @@ public interface ApplicationComponent {
     void inject(JoystickFragment joystickFragment);
 
     void inject(StelsFragment stelsFragment);
+
+    void inject(StelsPresenter stelsPresenter);
 }

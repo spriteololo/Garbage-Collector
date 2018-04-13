@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import by.brstu.dmitry.garbagecollector.application.Constants;
 import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.joystick_mode.JoystickFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.stels_mode.StelsFragment;
+import by.brstu.dmitry.garbagecollector.ui.viewPager.CustomViewPager;
 
 
 public class ManualControlFragment extends BaseMvpFragment implements ManualControlView {
@@ -36,6 +36,9 @@ public class ManualControlFragment extends BaseMvpFragment implements ManualCont
     @BindView(R.id.mmm)
     TextView tv;
 
+    @BindView(R.id.manual_control_view_pager)
+    CustomViewPager viewPager;
+
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,22 +51,23 @@ public class ManualControlFragment extends BaseMvpFragment implements ManualCont
     public View onCreateView(final LayoutInflater inflater,
                              @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_manual_control, container, false);
-
-        ViewPager viewPager = view.findViewById(R.id.manual_control_view_pager);
-        viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
-
-        return view;
+        return inflater.inflate(R.layout.fragment_manual_control, container, false);
     }
 
     @Override
     protected void onViewsBinded() {
+        viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
+
         final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
         if (actionBar != null) {
             actionBar.setTitle(R.string.manual_control);
         }
 
+    }
+
+    public void setPaging(final boolean setPaging) {
+        viewPager.setPagingEnabled(setPaging);
     }
 
     public static class MyAdapter extends FragmentPagerAdapter {

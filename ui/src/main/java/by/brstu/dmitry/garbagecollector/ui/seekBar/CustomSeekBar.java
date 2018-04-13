@@ -2,11 +2,21 @@ package by.brstu.dmitry.garbagecollector.ui.seekBar;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.widget.SeekBar;
 
 public class CustomSeekBar extends AppCompatSeekBar {
+
+    private TouchEventListener touchEventListener;
+
+    public void setTouchEventListener(final TouchEventListener touchEventListener) {
+        this.touchEventListener = touchEventListener;
+    }
+
     public CustomSeekBar(final Context context) {
         super(context);
     }
@@ -37,6 +47,52 @@ public class CustomSeekBar extends AppCompatSeekBar {
     }
 
     @Override
+    public synchronized void setProgress(final int progress) {
+       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setProgressDrawable(createGradient(progress));
+        }*/
+
+        getProgressDrawable().setColorFilter(createColor(Math.abs(progress - 255)), PorterDuff.Mode.DARKEN);
+        super.setProgress(progress);
+    }
+
+    private int createColor(int progress) {
+        if (progress < 128) {
+            progress <<= 16;
+            progress += 0xFF00;
+        } else {
+            progress <<= 8;
+            progress = 0xFF00 - progress;
+            progress += 0xFF0000;
+        }
+        return progress;
+    }
+
+    private LayerDrawable createGradient(final int progress) {
+
+
+
+       /* final int bckgrnd[] = {Color.parseColor("#ffe9e9e9"), Color.parseColor("#ffc6c6c6"), Color.parseColor("#ffe9e9e9")};
+        final GradientDrawable bckgrndgd = new GradientDrawable(
+                GradientDrawable.Orientation.BOTTOM_TOP, bckgrnd);
+        bckgrndgd.setGradientCenter(0.5f, 0.75f);
+
+
+        final int prgrss[] = {Color.parseColor("#ffe9e9e9"), Color.parseColor("#ff2165ca")};
+        final GradientDrawable prgrssgd = new GradientDrawable(
+                GradientDrawable.Orientation.BOTTOM_TOP, prgrss);
+
+
+        LayerDrawable resultDr = new LayerDrawable(new Drawable[]{bckgrndgd, prgrssgd});
+        //setting ids is important
+        resultDr.setId(0, android.R.id.background);
+        resultDr.setId(1, android.R.id.progress);*/
+
+
+        return null;
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!isEnabled()) {
             return false;
@@ -44,6 +100,9 @@ public class CustomSeekBar extends AppCompatSeekBar {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                if (touchEventListener != null) {
+                    touchEventListener.onStartTrackingTouch(this);
+                }
             case MotionEvent.ACTION_MOVE:
                 int i;
                 i = getMax() - (int) (getMax() * event.getY() / getHeight());
@@ -52,9 +111,18 @@ public class CustomSeekBar extends AppCompatSeekBar {
                 break;
 
             case MotionEvent.ACTION_UP:
-                setProgress(0);
+                if (touchEventListener != null) {
+                    touchEventListener.onStopTrackingTouch(this);
+                }
+                setProgress(255);
                 break;
         }
         return true;
+    }
+
+    public interface TouchEventListener {
+        void onStartTrackingTouch(SeekBar seekBar);
+
+        void onStopTrackingTouch(SeekBar seekBar);
     }
 }

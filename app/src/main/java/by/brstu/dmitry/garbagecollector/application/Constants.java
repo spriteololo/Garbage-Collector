@@ -5,6 +5,8 @@ import by.brstu.dmitry.garbagecollector.BuildConfig;
 public class Constants {
 
     public static final short CONNECTION_TO_ROBOT_DELAY_CHECK = 1000;
+    public static final short MINIMUM_WHEEL_VALUE = 130;
+    public static final int BASE_TIME = 20;
 
     public interface BaseApi {
        // String BASE_URL_UNCOMMENT = "http://192.168.43.3/"; //TODO

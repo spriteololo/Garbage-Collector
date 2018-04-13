@@ -98,10 +98,4 @@ public class ManualControlPresenter extends BaseInternetMvpPresenter<ManualContr
 
     }
 
-
-    public void stelsWheel(final boolean isRightWheel, final int value) {
-        if(isRightWheel) {
-            //TODO
-        }
-    }
 }

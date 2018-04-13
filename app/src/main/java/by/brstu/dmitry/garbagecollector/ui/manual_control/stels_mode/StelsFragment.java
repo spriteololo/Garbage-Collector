@@ -15,14 +15,20 @@ import by.brstu.dmitry.garbagecollector.R;
 import by.brstu.dmitry.garbagecollector.application.BaseApplication;
 import by.brstu.dmitry.garbagecollector.application.Constants;
 import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpFragment;
+import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlPresenter;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlView;
 import by.brstu.dmitry.garbagecollector.ui.seekBar.CustomSeekBar;
 
-public class StelsFragment extends BaseMvpFragment implements ManualControlView, SeekBar.OnSeekBarChangeListener {
+public class StelsFragment extends BaseMvpFragment implements ManualControlView,
+        SeekBar.OnSeekBarChangeListener,
+        StelsView, CustomSeekBar.TouchEventListener {
 
     @InjectPresenter
     ManualControlPresenter controlPresenter;
+
+    @InjectPresenter
+    StelsPresenter presenter;
 
     @BindView(R.id.stels_text_view)
     TextView textView;
@@ -32,6 +38,8 @@ public class StelsFragment extends BaseMvpFragment implements ManualControlView,
 
     @BindView(R.id.stels_right_seek_bar)
     CustomSeekBar rightBar;
+
+    Byte touches = 0;
 
     public static StelsFragment getInstance(final int position) {
         StelsFragment stelsFragment = new StelsFragment();
@@ -61,26 +69,30 @@ public class StelsFragment extends BaseMvpFragment implements ManualControlView,
     protected void onViewsBinded() {
         leftBar.setOnSeekBarChangeListener(this);
         rightBar.setOnSeekBarChangeListener(this);
+        leftBar.setTouchEventListener(this);
+        rightBar.setTouchEventListener(this);
     }
 
     @Override
     public void onProgressChanged(final SeekBar seekBar, final int i, final boolean b) {
-        if(seekBar.equals(leftBar)) {
-            controlPresenter.stelsWheel(false, i);
-
-        }
-        if(seekBar.equals(rightBar)) {
-            controlPresenter.stelsWheel(true, i);
-        }
+        presenter.setProgressChange(seekBar.equals(rightBar), i);
     }
 
     @Override
     public void onStartTrackingTouch(final SeekBar seekBar) {
-
+        touches++;
+        if (touches == 1) {
+            ((ManualControlFragment) getParentFragment()).setPaging(false);
+        }
+        presenter.movingControl(true);
     }
 
     @Override
     public void onStopTrackingTouch(final SeekBar seekBar) {
-
+        touches--;
+        if(touches == 0) {
+            ((ManualControlFragment) getParentFragment()).setPaging(true);
+        }
+        presenter.movingControl(false);
     }
 }

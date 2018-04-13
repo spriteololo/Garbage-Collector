@@ -17,4 +17,7 @@ public interface RequestInterface {
     @GET("b")
     Observable<ResponseBody> backward();
 
+    @GET("m")
+    Observable<ResponseBody> move(@Query("a") int leftDirection, @Query("b") int leftSpeed, @Query("c") int rightDirection, @Query("d") int rightSpeed,  @Query("t") int TIME);
+
 }
