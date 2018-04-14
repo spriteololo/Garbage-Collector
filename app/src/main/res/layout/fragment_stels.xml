@@ -14,7 +14,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="32dp">
 
         <by.brstu.dmitry.garbagecollector.ui.seekBar.CustomSeekBar
             android:id="@+id/stels_left_seek_bar"
@@ -27,6 +28,38 @@
             android:progressDrawable="@drawable/seek_bar"
             android:scaleX="2"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <by.brstu.dmitry.garbagecollector.ui.strengthLevel.StrengthLevel
+            android:id="@+id/stels_forward_sensor"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            app:layout_constraintBottom_toTopOf="@id/robot_image_upward_view"
+            app:layout_constraintEnd_toStartOf="@id/stels_right_seek_bar"
+            app:layout_constraintStart_toEndOf="@id/stels_left_seek_bar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/robot_image_upward_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toTopOf="@id/stels_backward_sensor"
+            app:layout_constraintEnd_toStartOf="@id/stels_right_seek_bar"
+            app:layout_constraintStart_toEndOf="@id/stels_left_seek_bar"
+            app:layout_constraintTop_toBottomOf="@id/stels_forward_sensor" />
+
+        <by.brstu.dmitry.garbagecollector.ui.strengthLevel.StrengthLevel
+            android:id="@+id/stels_backward_sensor"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/stels_right_seek_bar"
+            app:layout_constraintStart_toEndOf="@id/stels_left_seek_bar"
+            app:layout_constraintTop_toBottomOf="@id/robot_image_upward_view" />
 
         <by.brstu.dmitry.garbagecollector.ui.seekBar.CustomSeekBar
             android:id="@+id/stels_right_seek_bar"

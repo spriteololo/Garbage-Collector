@@ -6,10 +6,14 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.SeekBar;
 
 public class CustomSeekBar extends AppCompatSeekBar {
+
+    private final short CONST_MINIMUM_WHEEL_VALUE = 130;//Ref to constant
+    private final short CONST_SECOND_STAGE = (short) ((((getMax() / 2) - CONST_MINIMUM_WHEEL_VALUE) / 2) + CONST_MINIMUM_WHEEL_VALUE);
 
     private TouchEventListener touchEventListener;
 
@@ -48,24 +52,33 @@ public class CustomSeekBar extends AppCompatSeekBar {
 
     @Override
     public synchronized void setProgress(final int progress) {
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setProgressDrawable(createGradient(progress));
-        }*/
-
         getProgressDrawable().setColorFilter(createColor(Math.abs(progress - 255)), PorterDuff.Mode.DARKEN);
         super.setProgress(progress);
     }
 
     private int createColor(int progress) {
-        if (progress < 128) {
-            progress <<= 16;
+        Log.i("Color", "color = " + progress);
+        if (progress > 250) {
+            return 0xFFFF0000;
+        }
+        if (progress < CONST_MINIMUM_WHEEL_VALUE) {
+            progress = 0xFF - progress * 255 / CONST_MINIMUM_WHEEL_VALUE;
             progress += 0xFF00;
         } else {
-            progress <<= 8;
-            progress = 0xFF00 - progress;
-            progress += 0xFF0000;
+            if (progress <= CONST_SECOND_STAGE) {
+                progress = (progress - CONST_MINIMUM_WHEEL_VALUE) * 255 / (CONST_SECOND_STAGE - CONST_MINIMUM_WHEEL_VALUE);
+                progress <<= 16;
+                progress += 0xFF00;
+            } else {
+                progress = progress * 255 / (getMax() / 2 - CONST_SECOND_STAGE);
+                progress <<= 8;
+                progress = 0xFF00 - progress;
+                progress += 0xFF0000;
+            }
         }
-        return progress;
+
+        Log.i("Color", "color 2 = " + Integer.toHexString(progress));
+        return progress += 0xFF000000;
     }
 
     private LayerDrawable createGradient(final int progress) {

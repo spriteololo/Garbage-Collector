@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import by.brstu.dmitry.garbagecollector.application.BaseApplication;
 import by.brstu.dmitry.garbagecollector.inject.RequestInterface;
-import by.brstu.dmitry.garbagecollector.ui.all.base.BaseInternetMvpPresenter;
+import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpPresenter;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
 @InjectViewState
-public class ManualControlPresenter extends BaseInternetMvpPresenter<ManualControlView> {
+public class ManualControlPresenter extends BaseMvpPresenter<ManualControlView> {
 
     @Inject
     RequestInterface requestInterface;

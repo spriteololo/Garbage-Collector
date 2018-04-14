@@ -3,50 +3,78 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical">
-
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="24dp"
+        android:orientation="horizontal">
 
-        <RelativeLayout
-            android:id="@+id/manual_container"
+        <by.brstu.dmitry.garbagecollector.ui.seekBar.CustomSeekBar
+            android:id="@+id/seek_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:max="100"
+            android:progress="50"
+            android:progressDrawable="@drawable/seek_bar"
+            android:scaleX="2" />
+
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:gravity="center"
-            app:layout_constraintBottom_toTopOf="@id/manual_control_view_pager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/mmm"
+            <RelativeLayout
+                android:id="@+id/manual_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@id/manual_control_view_pager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/mmm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/manual_control" />
+
+                <ImageView
+                    android:id="@+id/img"
+                    android:layout_width="match_parent"
+                    android:scaleType="fitXY"
+                    android:layout_height="match_parent"
+                    android:src="@mipmap/ic_launcher" />
+
+            </RelativeLayout>
+
+            <android.support.constraint.Guideline
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/guideline"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.4" />
 
-                android:text="@string/manual_control" />
-
-        </RelativeLayout>
-
-        <by.brstu.dmitry.garbagecollector.ui.viewPager.CustomViewPager
-            android:id="@+id/manual_control_view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/manual_container">
-
-            <android.support.v4.view.PagerTabStrip
+            <by.brstu.dmitry.garbagecollector.ui.viewPager.CustomViewPager
+                android:id="@+id/manual_control_view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="40dp">
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/guideline">
 
-            </android.support.v4.view.PagerTabStrip>
+                <by.brstu.dmitry.garbagecollector.ui.pagerTab.CustomPagerBar
+                    android:id="@+id/pager_tab_manual_control"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
 
-        </by.brstu.dmitry.garbagecollector.ui.viewPager.CustomViewPager>
+                </by.brstu.dmitry.garbagecollector.ui.pagerTab.CustomPagerBar>
 
-    </android.support.constraint.ConstraintLayout>
+            </by.brstu.dmitry.garbagecollector.ui.viewPager.CustomViewPager>
 
+        </android.support.constraint.ConstraintLayout>
+
+    </LinearLayout>
 
 </FrameLayout>

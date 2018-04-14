@@ -19,6 +19,7 @@ import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlPresenter;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlView;
 import by.brstu.dmitry.garbagecollector.ui.seekBar.CustomSeekBar;
+import by.brstu.dmitry.garbagecollector.ui.strengthLevel.StrengthLevel;
 
 public class StelsFragment extends BaseMvpFragment implements ManualControlView,
         SeekBar.OnSeekBarChangeListener,
@@ -38,6 +39,13 @@ public class StelsFragment extends BaseMvpFragment implements ManualControlView,
 
     @BindView(R.id.stels_right_seek_bar)
     CustomSeekBar rightBar;
+
+    @BindView(R.id.stels_backward_sensor)
+    StrengthLevel backwardSensor;
+
+    @BindView(R.id.stels_forward_sensor)
+    StrengthLevel forwardSensor;
+
 
     Byte touches = 0;
 
@@ -71,11 +79,16 @@ public class StelsFragment extends BaseMvpFragment implements ManualControlView,
         rightBar.setOnSeekBarChangeListener(this);
         leftBar.setTouchEventListener(this);
         rightBar.setTouchEventListener(this);
+
+        backwardSensor.setReverse(true);
     }
 
     @Override
     public void onProgressChanged(final SeekBar seekBar, final int i, final boolean b) {
         presenter.setProgressChange(seekBar.equals(rightBar), i);
+
+        backwardSensor.setInnerRadius(i / (float) seekBar.getMax());
+        forwardSensor.setInnerRadius(i / (float) seekBar.getMax());
     }
 
     @Override
@@ -90,7 +103,7 @@ public class StelsFragment extends BaseMvpFragment implements ManualControlView,
     @Override
     public void onStopTrackingTouch(final SeekBar seekBar) {
         touches--;
-        if(touches == 0) {
+        if (touches == 0) {
             ((ManualControlFragment) getParentFragment()).setPaging(true);
         }
         presenter.movingControl(false);
