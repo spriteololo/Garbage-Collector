@@ -33,6 +33,7 @@ import by.brstu.dmitry.garbagecollector.ui.login.LoginInterface;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlView;
 import by.brstu.dmitry.garbagecollector.ui.moves_recording.MovesRecordingFragment;
+import by.brstu.dmitry.garbagecollector.ui.object_following.ObjectFollowingFragment;
 import ru.terrakok.cicerone.Navigator;
 import ru.terrakok.cicerone.android.SupportFragmentNavigator;
 import ru.terrakok.cicerone.commands.BackTo;
@@ -142,7 +143,9 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
             case R.id.auto_moving:
                 screenName = Constants.Screens.AUTO_MOVING_SCREEN;
                 break;
-
+            case R.id.object_following:
+                screenName = Constants.Screens.OBJECT_FOLLOWING_SCREEN;
+                break;
             //Admin
             case R.id.moves_recording:
                 screenName = Constants.Screens.MOVES_RECORDING_SCREEN;
@@ -169,6 +172,8 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
                     return ManualControlFragment.getInstance();
                 case Constants.Screens.AUTO_MOVING_SCREEN:
                     return AutoMovingFragment.getInstance();
+                case Constants.Screens.OBJECT_FOLLOWING_SCREEN:
+                    return ObjectFollowingFragment.getInstance();
                 //Admin
                 case Constants.Screens.MOVES_RECORDING_SCREEN:
                     return MovesRecordingFragment.getInstance();

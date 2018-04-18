@@ -14,8 +14,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="32dp">
+        android:layout_height="match_parent">
 
         <by.brstu.dmitry.garbagecollector.ui.seekBar.CustomSeekBar
             android:id="@+id/stels_left_seek_bar"
@@ -35,6 +34,7 @@
             android:layout_height="0dp"
             android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"
+            android:paddingBottom="32dp"
             app:layout_constraintBottom_toTopOf="@id/robot_image_upward_view"
             app:layout_constraintEnd_toStartOf="@id/stels_right_seek_bar"
             app:layout_constraintStart_toEndOf="@id/stels_left_seek_bar"
@@ -56,6 +56,7 @@
             android:layout_height="0dp"
             android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"
+            android:paddingBottom="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/stels_right_seek_bar"
             app:layout_constraintStart_toEndOf="@id/stels_left_seek_bar"

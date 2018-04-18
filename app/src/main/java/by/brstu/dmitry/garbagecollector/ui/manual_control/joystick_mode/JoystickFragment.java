@@ -7,14 +7,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.arellomobile.mvp.presenter.InjectPresenter;
+
 import butterknife.BindView;
 import by.brstu.dmitry.garbagecollector.R;
 import by.brstu.dmitry.garbagecollector.application.BaseApplication;
 import by.brstu.dmitry.garbagecollector.application.Constants;
 import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpFragment;
+import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlPresenter;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlView;
+import io.github.controlwear.virtual.joystick.android.JoystickView;
 
-public class JoystickFragment extends BaseMvpFragment implements ManualControlView {
+public class JoystickFragment extends BaseMvpFragment implements ManualControlView,
+        JoystickManualView, JoystickView.OnMoveListener {
+
+    @InjectPresenter
+    ManualControlPresenter controlPresenter;
+
+    @InjectPresenter
+    JoystickPresenter presenter;
+
+    @BindView(R.id.joystick_joystick_view)
+    JoystickView joystickView;
 
     @BindView(R.id.joystick_text_view)
     TextView textView;
@@ -45,6 +59,13 @@ public class JoystickFragment extends BaseMvpFragment implements ManualControlVi
 
     @Override
     protected void onViewsBinded() {
+        joystickView.setOnMoveListener(this, 1000 / Constants.BASE_TIME);
+        //Second divide by refresh rate
 
+    }
+
+    @Override
+    public void onMove(final int angle, final int strength) {
+        presenter.onMove(angle, strength);
     }
 }

@@ -51,14 +51,12 @@ public class StelsPresenter extends BaseMvpPresenter<StelsView> {
     public void movingControl(final boolean isStart) {
 
         if (isStart) {
-            isStarted++;
-            if (isStarted == 1) {
+            if (++isStarted == 1) {
                 robotMoving = new RobotMoving();
                 robotMoving.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         } else {
-            isStarted--;
-            if (isStarted == 0) {
+            if (--isStarted == 0) {
                 if (robotMoving != null) {
                     robotMoving.cancel(false);
                 }

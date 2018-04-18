@@ -20,6 +20,7 @@
     <string name="stels">Manual/stels</string>
 
     <string name="auto_moving">Auto Moving</string>
+    <string name="object_following">Object Following</string>
 
 
     <string name="no_network_connection">Network connection error</string>
@@ -30,4 +31,8 @@
     <string name="connected_to_network">Network is connected!</string>
     <string name="robot_is_disconnecting">Robot is disconnecting…</string>
     <string name="network_is_disconnecting">Network is disconnecting…</string>
+    <string name="forward_sensor">Forward sensor</string>
+    <string name="backward_sensor">Backward sensor</string>
+    <string name="object_following_start">Start follow</string>
+    <string name="object_following_stop">Stop follow</string>
 </resources>

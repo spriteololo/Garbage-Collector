@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -24,11 +23,10 @@ import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.joystick_mode.JoystickFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.stels_mode.StelsFragment;
 import by.brstu.dmitry.garbagecollector.ui.pagerTab.CustomPagerBar;
-import by.brstu.dmitry.garbagecollector.ui.seekBar.CustomSeekBar;
 import by.brstu.dmitry.garbagecollector.ui.viewPager.CustomViewPager;
 
 
-public class ManualControlFragment extends BaseMvpFragment implements ManualControlView, SeekBar.OnSeekBarChangeListener {
+public class ManualControlFragment extends BaseMvpFragment implements ManualControlView{
 
     @InjectPresenter
     ManualControlPresenter manualControlPresenter;
@@ -39,9 +37,6 @@ public class ManualControlFragment extends BaseMvpFragment implements ManualCont
 
     @BindView(R.id.mmm)
     TextView tv;
-
-    @BindView(R.id.seek_bar)
-    CustomSeekBar seekBar;
 
     @BindView(R.id.guideline)
     Guideline guideLine;
@@ -77,34 +72,14 @@ public class ManualControlFragment extends BaseMvpFragment implements ManualCont
             actionBar.setTitle(R.string.manual_control);
         }
 
-        seekBar.setOnSeekBarChangeListener(this);
-
         pagerTab.setGuideline(guideLine);
-
     }
 
     public void setPaging(final boolean setPaging) {
         viewPager.setPagingEnabled(setPaging);
     }
 
-    @Override
-    public void onProgressChanged(final SeekBar seekBar, final int i, final boolean b) {
-
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(final SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(final SeekBar seekBar) {
-
-    }
-
-    public static class MyAdapter extends FragmentPagerAdapter {
-
+    private class MyAdapter extends FragmentPagerAdapter {
 
         MyAdapter(FragmentManager fm) {
             super(fm);

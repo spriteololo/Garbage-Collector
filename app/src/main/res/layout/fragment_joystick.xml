@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <TextView
@@ -10,5 +11,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/joystick" />
+
+    <io.github.controlwear.virtual.joystick.android.JoystickView
+        android:id="@+id/joystick_joystick_view"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom|center"
+        android:layout_height="match_parent"
+        custom:JV_buttonColor="#FF6E40"
+        custom:JV_buttonSizeRatio="15%"
+        custom:JV_borderColor="#00796B"
+        custom:JV_backgroundColor="#009688"
+        custom:JV_borderWidth="4dp"
+        custom:JV_fixedCenter="false"/>
 
 </FrameLayout>

@@ -46,7 +46,6 @@ public class StelsFragment extends BaseMvpFragment implements ManualControlView,
     @BindView(R.id.stels_forward_sensor)
     StrengthLevel forwardSensor;
 
-
     Byte touches = 0;
 
     public static StelsFragment getInstance(final int position) {
@@ -93,8 +92,7 @@ public class StelsFragment extends BaseMvpFragment implements ManualControlView,
 
     @Override
     public void onStartTrackingTouch(final SeekBar seekBar) {
-        touches++;
-        if (touches == 1) {
+        if (++touches == 1) {
             ((ManualControlFragment) getParentFragment()).setPaging(false);
         }
         presenter.movingControl(true);
@@ -102,8 +100,7 @@ public class StelsFragment extends BaseMvpFragment implements ManualControlView,
 
     @Override
     public void onStopTrackingTouch(final SeekBar seekBar) {
-        touches--;
-        if (touches == 0) {
+        if (--touches == 0) {
             ((ManualControlFragment) getParentFragment()).setPaging(true);
         }
         presenter.movingControl(false);
