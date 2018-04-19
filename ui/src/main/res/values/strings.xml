@@ -10,6 +10,10 @@
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>
 
+    <string name="guest">Guest</string>
+    <string name="user">User</string>
+    <string name="admin">Admin</string>
+
     <string name="home">Status</string>
     <string name="login">Login</string>
     <string name="test">Test</string>

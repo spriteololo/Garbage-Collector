@@ -100,6 +100,20 @@ public class ObjectFollowingFragment extends BaseMvpFragment implements ObjectFo
             }
         });
 
+        forwardSensor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                forwardRadio.setChecked(true);
+            }
+        });
+
+        backwardSensor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                backwardRadio.setChecked(true);
+            }
+        });
+
         forwardRadio.setChecked(true);
     }
 

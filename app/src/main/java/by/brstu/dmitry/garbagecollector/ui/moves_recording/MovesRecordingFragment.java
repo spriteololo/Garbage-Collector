@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
@@ -34,9 +33,6 @@ public class MovesRecordingFragment extends BaseMvpFragment implements MovesReco
     public static MovesRecordingFragment getInstance() {
         return new MovesRecordingFragment();
     }
-
-    @BindView(R.id.mmm)
-    TextView tv;
 
     @BindView(R.id.guideline)
     Guideline guideLine;

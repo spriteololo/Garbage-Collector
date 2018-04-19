@@ -11,6 +11,16 @@ import butterknife.Unbinder;
 public abstract class BaseFragment extends Fragment {
 
     private Unbinder unbinder;
+    View exitAnimationView;
+
+    public View getExitAnimationView() {
+        return exitAnimationView;
+    }
+
+    public void setExitAnimationView(View view) {
+        exitAnimationView = view;
+    }
+
 
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {

@@ -1,19 +1,20 @@
 package by.brstu.dmitry.garbagecollector.ui.home;
 
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.transition.TransitionManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -61,7 +62,6 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-
 
     private String screenName;
 
@@ -186,8 +186,30 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
         @Override
         protected void setupFragmentTransactionAnimation(final Command command, final Fragment currentFragment,
                                                          final Fragment nextFragment, final FragmentTransaction fragmentTransaction) {
-            final ViewGroup viewGroup = findViewById(R.id.fragment_container);
-            TransitionManager.beginDelayedTransition(viewGroup);
+            if (currentFragment != null &&
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                final Transition transition = TransitionInflater.from(getApplicationContext())
+                        .inflateTransition(android.R.transition.slide_left);
+
+                nextFragment.setSharedElementEnterTransition(transition);
+                currentFragment.setSharedElementEnterTransition(transition);
+
+                if(getNum(currentFragment) > getNum(nextFragment)) {
+                    fragmentTransaction.setCustomAnimations(R.transition.enter_from_left, R.transition.exit_to_right);
+                } else {
+                    if (getNum(currentFragment) < getNum(nextFragment)) {
+                        fragmentTransaction.setCustomAnimations(R.transition.enter_from_right, R.transition.exit_to_left);
+                    }
+                }
+
+
+            }
+
+            super.setupFragmentTransactionAnimation(command, currentFragment, nextFragment, fragmentTransaction);
+
+            /*final ViewGroup viewGroup = findViewById(R.id.fragment_container);
+            TransitionManager.beginDelayedTransition(viewGroup);*/
         }
 
         @Override
@@ -205,6 +227,15 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
             super.applyCommand(command);
         }
     };
+
+    private short getNum(final Fragment fragment) {
+        if(fragment instanceof LoginFragment) return 1;
+        if(fragment instanceof HomeFragment) return 2;
+        if(fragment instanceof ManualControlFragment) return 3;
+        if(fragment instanceof AutoMovingFragment) return 4;
+        if(fragment instanceof ObjectFollowingFragment) return 5;
+        return 0;
+    }
 
     @Override
     public void setDrawerChangingGroupsVisibility(final int typeOfUser) {
@@ -230,7 +261,9 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
             setToolbarTitle("Login");
         }
 
+        navigationView.setCheckedItem(R.id.nav_home);
         navigator.applyCommand(new Replace(Constants.Screens.HOME_SCREEN, null));
+        drawerLayout.openDrawer(GravityCompat.START, true);
     }
 
     @Override
