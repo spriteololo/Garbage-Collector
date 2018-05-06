@@ -10,6 +10,7 @@ import by.brstu.dmitry.garbagecollector.ui.home.HomePresenter;
 import by.brstu.dmitry.garbagecollector.ui.home.HomeScreenActivity;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlPresenter;
+import by.brstu.dmitry.garbagecollector.ui.manual_control.compass_mode.CompassFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.joystick_mode.JoystickFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.joystick_mode.JoystickPresenter;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.stels_mode.StelsFragment;
@@ -47,4 +48,6 @@ public interface ApplicationComponent {
     void inject(ObjectFollowingFragment objectFollowingFragment);
 
     void inject(ObjectFollowingPresenter objectFollowingPresenter);
+
+    void inject(CompassFragment compassFragment);
 }

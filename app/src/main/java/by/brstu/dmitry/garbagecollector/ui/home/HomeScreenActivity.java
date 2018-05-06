@@ -26,6 +26,7 @@ import by.brstu.dmitry.garbagecollector.R;
 import by.brstu.dmitry.garbagecollector.application.BaseApplication;
 import by.brstu.dmitry.garbagecollector.application.Constants;
 import by.brstu.dmitry.garbagecollector.application.InternetConnectionState.ConnectionType;
+import by.brstu.dmitry.garbagecollector.pojo.RefreshData;
 import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpActivity;
 import by.brstu.dmitry.garbagecollector.ui.all.base.NetworkStateReceiver;
 import by.brstu.dmitry.garbagecollector.ui.auto_moving.AutoMovingFragment;
@@ -106,11 +107,13 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
         this.registerReceiver(networkStateReceiver,
                 new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
         networkStateReceiver.updateInfo(this);
+        homePresenter.networkStateTry();
     }
 
     @Override
     protected void onPause() {
         BaseApplication.getNavigatorHolder().removeNavigator();
+        homePresenter.networkStateChanged(false);
         super.onPause();
     }
 
@@ -277,4 +280,15 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
         connectionState(ConnectionType.NO_NETWORK_CONNECTION);
         homePresenter.networkStateChanged(false);
     }
+
+    @Override
+    public void setLidState(boolean isClosed) {
+
+    }
+
+    @Override
+    public void setBaseData(RefreshData refreshData) {
+
+    }
+
 }

@@ -22,6 +22,7 @@
     <string name="moves_recording">Moves Recording</string>
     <string name="joystick">Manual/joystick</string>
     <string name="stels">Manual/stels</string>
+    <string name="compass">Manual/compass</string>
 
     <string name="auto_moving">Auto Moving</string>
     <string name="object_following">Object Following</string>
@@ -39,4 +40,5 @@
     <string name="backward_sensor">Backward sensor</string>
     <string name="object_following_start">Start follow</string>
     <string name="object_following_stop">Stop follow</string>
+
 </resources>

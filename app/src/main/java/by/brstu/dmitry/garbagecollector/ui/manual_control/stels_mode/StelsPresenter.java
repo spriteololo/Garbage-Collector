@@ -11,10 +11,12 @@ import javax.inject.Inject;
 
 import by.brstu.dmitry.garbagecollector.application.BaseApplication;
 import by.brstu.dmitry.garbagecollector.application.Constants;
+import by.brstu.dmitry.garbagecollector.application.DisposingObserver;
 import by.brstu.dmitry.garbagecollector.inject.RequestInterface;
 import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpPresenter;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
@@ -79,13 +81,14 @@ public class StelsPresenter extends BaseMvpPresenter<StelsView> {
                         rightWheelSpeed > Constants.MINIMUM_WHEEL_VALUE) {
                     Log.i("Moving", "Left " + leftWheelSpeed + " Right " + rightWheelSpeed);
 
+
                     requestInterface.move(leftDirection ? 1 : 0, leftWheelSpeed, rightDirection ? 1 : 0, rightWheelSpeed, Constants.BASE_TIME)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Observer<ResponseBody>() {
+                            .subscribe(new DisposingObserver<ResponseBody>() {
                                 @Override
                                 public void onSubscribe(final Disposable d) {
-
+                                    super.onSubscribe(d);
                                 }
 
                                 @Override

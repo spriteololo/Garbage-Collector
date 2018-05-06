@@ -8,7 +8,7 @@ import retrofit2.http.Query;
 
 public interface RequestInterface {
 
-    @GET("m")
+    @GET("f")
     Observable<ResponseBody> checkConnectionToRobot(); //forward sensor
 
     @GET("m")
@@ -20,4 +20,17 @@ public interface RequestInterface {
     @GET("m")
     Observable<ResponseBody> move(@Query("a") int leftDirection, @Query("b") int leftSpeed, @Query("c") int rightDirection, @Query("d") int rightSpeed,  @Query("t") int TIME);
 
+
+
+    @GET("a")//TODO
+    Observable<ResponseBody> checkLidState();
+
+    @GET("i")
+    Observable<ResponseBody> refreshBaseData();
+
+    @GET("o")
+    Observable<ResponseBody> openLid();
+
+    @GET("k")
+    Observable<ResponseBody> closeLid();
 }

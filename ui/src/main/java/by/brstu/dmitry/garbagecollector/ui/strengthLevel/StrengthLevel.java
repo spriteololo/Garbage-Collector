@@ -40,6 +40,9 @@ public class StrengthLevel extends View {
 
     public StrengthLevel(final Context context, @Nullable final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        circle = new RectF();
     }
 
     public void setInnerRadius(final float innerRadius) {

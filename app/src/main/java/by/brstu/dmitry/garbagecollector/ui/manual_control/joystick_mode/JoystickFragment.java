@@ -13,6 +13,7 @@ import butterknife.BindView;
 import by.brstu.dmitry.garbagecollector.R;
 import by.brstu.dmitry.garbagecollector.application.BaseApplication;
 import by.brstu.dmitry.garbagecollector.application.Constants;
+import by.brstu.dmitry.garbagecollector.pojo.RefreshData;
 import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlPresenter;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlView;
@@ -67,5 +68,15 @@ public class JoystickFragment extends BaseMvpFragment implements ManualControlVi
     @Override
     public void onMove(final int angle, final int strength) {
         presenter.onMove(angle, strength);
+    }
+
+    @Override
+    public void setLidState(boolean isClosed) {
+
+    }
+
+    @Override
+    public void setBaseData(RefreshData refreshData) {
+
     }
 }

@@ -71,4 +71,13 @@ public class HomePresenter extends BaseInternetMvpPresenter<HomeView> implements
             }
         }
     }
+
+    public void networkStateTry() {
+        connection = 0;
+        disconnection = 0;
+        if(connectionToRobot == null) {
+            connectionToRobot = new ConnectionToRobot(requestInterface);
+            connectionToRobot.execute();
+        }
+    }
 }

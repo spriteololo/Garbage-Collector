@@ -17,7 +17,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00000000"
+            android:background="#10FFFFFF"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_guest_background" />
 
@@ -33,7 +33,6 @@
         android:id="@+id/activity_login_user_button"
         android:layout_width="0dp"
         android:layout_height="0dp"
-
         app:layout_constraintBottom_toTopOf="@id/activity_login_admin_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +41,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00000000"
+            android:background="#18FFFFFF"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_user_background" />
 
@@ -66,7 +65,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00000000"
+            android:background="#20FFFFFF"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_admin_background" />
 

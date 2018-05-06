@@ -11,6 +11,7 @@ import com.arellomobile.mvp.MvpView;
 import java.util.concurrent.TimeUnit;
 
 import by.brstu.dmitry.garbagecollector.application.Constants;
+import by.brstu.dmitry.garbagecollector.application.DisposingObserver;
 import by.brstu.dmitry.garbagecollector.inject.RequestInterface;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -20,8 +21,8 @@ import okhttp3.ResponseBody;
 
 public class BaseInternetMvpPresenter<View extends MvpView> extends BaseMvpPresenter<View> {
 
-    private short connection = 0;
-    private short disconnection = 0;
+    protected short connection = 0;
+    protected short disconnection = 0;
     private RobotConnectionListener robotConnectionListener;
 
 
@@ -61,9 +62,10 @@ public class BaseInternetMvpPresenter<View extends MvpView> extends BaseMvpPrese
                 requestInterface.checkConnectionToRobot()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<ResponseBody>() {
+                        .subscribe(new DisposingObserver<ResponseBody>() {
                             @Override
                             public void onSubscribe(final Disposable d) {
+                                addContinuous(d);
                             }
 
                             @Override

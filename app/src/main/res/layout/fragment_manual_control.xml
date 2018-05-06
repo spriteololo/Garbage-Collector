@@ -9,10 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/manual_container"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
+            android:foreground="?attr/selectableItemBackground"
             app:layout_constraintBottom_toTopOf="@id/manual_control_view_pager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -21,17 +22,70 @@
             <TextView
                 android:id="@+id/mmm"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/manual_control" />
-
-            <ImageView
-                android:id="@+id/img"
-                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@mipmap/ic_launcher" />
+                android:gravity="bottom" /><!--TODO-->
 
-        </RelativeLayout>
+            <by.brstu.dmitry.garbagecollector.ui.temperatureView.TemperatureView
+                android:id="@+id/manual_control_temperature"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toStartOf="@id/lid_state_view"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <by.brstu.dmitry.garbagecollector.ui.lidState.LidStateView
+                android:id="@+id/lid_state_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toStartOf="@id/battery_container"
+                app:layout_constraintStart_toEndOf="@id/manual_control_temperature" />
+
+            <LinearLayout
+                android:id="@+id/battery_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/lid_state_view"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="8dp"
+                    android:paddingStart="8dp"
+                    android:text="Battery level:" />
+
+                <by.brstu.dmitry.garbagecollector.ui.BatteryView
+                    android:id="@+id/manual_control_battery"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="16dp"
+                    android:paddingBottom="16dp"
+                    app:level="9"
+                    app:warningLevel="15" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="8dp"
+                    android:paddingStart="8dp"
+                    android:text="Fullness:" />
+
+                <by.brstu.dmitry.garbagecollector.ui.BatteryView
+                    android:id="@+id/manual_control_fullness"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingBottom="16dp"
+                    app:level="69"
+                    app:reversedColors="true"
+                    app:warningLevel="80" />
+            </LinearLayout>
+
+
+        </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline"

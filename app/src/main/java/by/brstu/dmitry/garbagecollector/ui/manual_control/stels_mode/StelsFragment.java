@@ -14,6 +14,7 @@ import butterknife.BindView;
 import by.brstu.dmitry.garbagecollector.R;
 import by.brstu.dmitry.garbagecollector.application.BaseApplication;
 import by.brstu.dmitry.garbagecollector.application.Constants;
+import by.brstu.dmitry.garbagecollector.pojo.RefreshData;
 import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlFragment;
 import by.brstu.dmitry.garbagecollector.ui.manual_control.ManualControlPresenter;
@@ -83,6 +84,18 @@ public class StelsFragment extends BaseMvpFragment implements ManualControlView,
     }
 
     @Override
+    public void onPause() {
+        controlPresenter.stopRefresh();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        controlPresenter.startRefresh();
+        super.onResume();
+    }
+
+    @Override
     public void onProgressChanged(final SeekBar seekBar, final int i, final boolean b) {
         presenter.setProgressChange(seekBar.equals(rightBar), i);
 
@@ -104,5 +117,16 @@ public class StelsFragment extends BaseMvpFragment implements ManualControlView,
             ((ManualControlFragment) getParentFragment()).setPaging(true);
         }
         presenter.movingControl(false);
+    }
+
+    @Override
+    public void setLidState(boolean isClosed) {
+
+    }
+
+    @Override
+    public void setBaseData(RefreshData refreshData) {
+        backwardSensor.setInnerRadius(1 / refreshData.getBackInfra());
+        forwardSensor.setInnerRadius(1 / refreshData.getFrontInfra());
     }
 }
