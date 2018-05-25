@@ -40,5 +40,11 @@
     <string name="backward_sensor">Backward sensor</string>
     <string name="object_following_start">Start follow</string>
     <string name="object_following_stop">Stop follow</string>
+    <string name="object_read_start">Start Read Data</string>
+    <string name="object_read_stop">Stop Read Data</string>
+
+
+    <string name="training_str">Training: </string>
+    <string name="evaluation">Evaluation: </string>
 
 </resources>

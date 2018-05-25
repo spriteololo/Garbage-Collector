@@ -1,6 +1,5 @@
 package by.brstu.dmitry.garbagecollector.ui.manual_control.stels_mode;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -11,116 +10,114 @@ import javax.inject.Inject;
 
 import by.brstu.dmitry.garbagecollector.application.BaseApplication;
 import by.brstu.dmitry.garbagecollector.application.Constants;
+import by.brstu.dmitry.garbagecollector.application.Constants.DataType;
 import by.brstu.dmitry.garbagecollector.application.DisposingObserver;
-import by.brstu.dmitry.garbagecollector.inject.RequestInterface;
+import by.brstu.dmitry.garbagecollector.model.homeScreen.ManualControlScreen.OtherManualModes.IStels;
 import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpPresenter;
-import io.reactivex.Observer;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
 @InjectViewState
-public class StelsPresenter extends BaseMvpPresenter<StelsView> {
+public class StelsPresenter extends BaseMvpPresenter<StelsView> implements IStels.Actions {
 
     @Inject
-    RequestInterface requestInterface;
+    IStels interactor;
 
     private int leftWheelSpeed;
     private int rightWheelSpeed;
     private boolean leftDirection;
     private boolean rightDirection;
 
-    private RobotMoving robotMoving;
+    private Disposable robotMoving;
     private Byte isStarted = 0;
 
     StelsPresenter() {
         BaseApplication.getApplicationComponent().inject(this);
+        interactor.setActions(this);
     }
 
-    public void setProgressChange(final boolean rightWheel, final int i) {
+    void setProgressChange(final boolean rightWheel, int i) {
         if (rightWheel) {
-            rightWheelSpeed = Math.abs(i - 255) > Constants.MINIMUM_WHEEL_VALUE ? Math.abs(i - 255) : 0;
             rightDirection = (i < 255);
+            rightWheelSpeed = Math.abs(i - 255) * (Constants.MAXIMUM_SPEED_VALUE - Constants.MINIMUM_SPEED_VALUE) / 255 + Constants.MINIMUM_SPEED_VALUE;
+            if (rightWheelSpeed > 255) {
+                rightWheelSpeed = 255;
+            }
+            if (rightWheelSpeed == 130) rightWheelSpeed = 0;
+
         } else {
-            leftWheelSpeed = Math.abs(i - 255) > Constants.MINIMUM_WHEEL_VALUE ? Math.abs(i - 255) : 0;
             leftDirection = (i < 255);
+
+            leftWheelSpeed = Math.abs(i - 255) * (Constants.MAXIMUM_SPEED_VALUE - Constants.MINIMUM_SPEED_VALUE) / 255 + Constants.MINIMUM_SPEED_VALUE;
+            if (leftWheelSpeed > 255) {
+                leftWheelSpeed = 255;
+            }
+            if (leftWheelSpeed == 130) leftWheelSpeed = 0;
         }
     }
 
 
-    public void movingControl(final boolean isStart) {
+    void movingControl(final boolean isStart) {
 
         if (isStart) {
             if (++isStarted == 1) {
-                robotMoving = new RobotMoving();
-                robotMoving.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                robotMoving = Observable.interval(200, TimeUnit.MILLISECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(a -> robotMoving());
             }
         } else {
             if (--isStarted == 0) {
-                if (robotMoving != null) {
-                    robotMoving.cancel(false);
-                }
+                if (robotMoving != null && !robotMoving.isDisposed())
+                    robotMoving.dispose();
             }
         }
         Log.i("Moving", "isStarted = " + isStarted);
     }
 
-    protected class RobotMoving extends AsyncTask<Void, Void, Void> {
+    private void robotMoving() {
+        interactor.moveRobot(leftDirection ? leftWheelSpeed : -leftWheelSpeed,
+                rightDirection ? rightWheelSpeed : -rightWheelSpeed,
+                Constants.BASE_TIME);
+    }
 
-        public RobotMoving() {
+    @Override
+    public void onSuccess(Observable<ResponseBody> observable, @DataType int type) {
+        switch (type) {
+
+            case DataType.BACK_INFRA:
+                break;
+            case DataType.BASE_DATA:
+                break;
+            case DataType.FRONT_INFRA:
+                break;
+            case DataType.LID_CLOSED:
+                break;
+            case DataType.LID_OPEN:
+                break;
+            case DataType.MOVE_WHEELS:
+                observable.observeOn(AndroidSchedulers.mainThread())
+                        .doOnError(err -> getViewState().movingAvailability(false))
+                        .doOnNext(responseBody -> {
+                            getViewState().movingAvailability(true);
+                            String s = responseBody.string();
+                            Log.i("MovingPrevious", s.subSequence(s.length() - 4, s.length()) + "");
+                            Log.i("Moving", "Left " + leftWheelSpeed + " Right " + rightWheelSpeed);
+                        })
+                        .subscribe(new DisposingObserver<ResponseBody>() {
+                            @Override
+                            public void onSubscribe(final Disposable d) {
+                                //addRapid(d);
+                            }
+                        });
+                break;
         }
+    }
 
-        @Override
-        protected Void doInBackground(final Void... voids) {
+    @Override
+    public void onError() {
 
-            Log.i("Moving", "async");
-            while (true) {
-                if (leftWheelSpeed > Constants.MINIMUM_WHEEL_VALUE ||
-                        rightWheelSpeed > Constants.MINIMUM_WHEEL_VALUE) {
-                    Log.i("Moving", "Left " + leftWheelSpeed + " Right " + rightWheelSpeed);
-
-
-                    requestInterface.move(leftDirection ? 1 : 0, leftWheelSpeed, rightDirection ? 1 : 0, rightWheelSpeed, Constants.BASE_TIME)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new DisposingObserver<ResponseBody>() {
-                                @Override
-                                public void onSubscribe(final Disposable d) {
-                                    super.onSubscribe(d);
-                                }
-
-                                @Override
-                                public void onNext(final ResponseBody responseBody) {
-                                    Log.i("In", "OK");
-                                }
-
-                                @Override
-                                public void onError(final Throwable e) {
-                                    Log.i("In", "Error");
-                                    //Log.e("FORWARD", System.currentTimeMillis() + "" + e.toString());
-                                }
-
-                                @Override
-                                public void onComplete() {
-
-                                }
-                            });
-
-                }
-
-                if (isCancelled()) return null;
-
-                try {
-                    TimeUnit.MILLISECONDS.sleep(Constants.BASE_TIME);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (isCancelled()) return null;
-            }
-
-        }
     }
 }

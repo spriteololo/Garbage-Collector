@@ -25,6 +25,7 @@ import butterknife.BindView;
 import by.brstu.dmitry.garbagecollector.R;
 import by.brstu.dmitry.garbagecollector.application.BaseApplication;
 import by.brstu.dmitry.garbagecollector.application.Constants;
+import by.brstu.dmitry.garbagecollector.application.DisposableManager;
 import by.brstu.dmitry.garbagecollector.application.InternetConnectionState.ConnectionType;
 import by.brstu.dmitry.garbagecollector.pojo.RefreshData;
 import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpActivity;
@@ -107,14 +108,15 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
         this.registerReceiver(networkStateReceiver,
                 new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
         networkStateReceiver.updateInfo(this);
-        homePresenter.networkStateTry();
+        homePresenter.startThreads();
     }
 
     @Override
     protected void onPause() {
+        DisposableManager.disposeAll();
         BaseApplication.getNavigatorHolder().removeNavigator();
-        homePresenter.networkStateChanged(false);
         super.onPause();
+
     }
 
     @Override
@@ -198,7 +200,7 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
                 nextFragment.setSharedElementEnterTransition(transition);
                 currentFragment.setSharedElementEnterTransition(transition);
 
-                if(getNum(currentFragment) > getNum(nextFragment)) {
+                if (getNum(currentFragment) > getNum(nextFragment)) {
                     fragmentTransaction.setCustomAnimations(R.transition.enter_from_left, R.transition.exit_to_right);
                 } else {
                     if (getNum(currentFragment) < getNum(nextFragment)) {
@@ -208,11 +210,7 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
 
 
             }
-
             super.setupFragmentTransactionAnimation(command, currentFragment, nextFragment, fragmentTransaction);
-
-            /*final ViewGroup viewGroup = findViewById(R.id.fragment_container);
-            TransitionManager.beginDelayedTransition(viewGroup);*/
         }
 
         @Override
@@ -232,11 +230,11 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
     };
 
     private short getNum(final Fragment fragment) {
-        if(fragment instanceof LoginFragment) return 1;
-        if(fragment instanceof HomeFragment) return 2;
-        if(fragment instanceof ManualControlFragment) return 3;
-        if(fragment instanceof AutoMovingFragment) return 4;
-        if(fragment instanceof ObjectFollowingFragment) return 5;
+        if (fragment instanceof LoginFragment) return 1;
+        if (fragment instanceof HomeFragment) return 2;
+        if (fragment instanceof ManualControlFragment) return 3;
+        if (fragment instanceof AutoMovingFragment) return 4;
+        if (fragment instanceof ObjectFollowingFragment) return 5;
         return 0;
     }
 
@@ -271,14 +269,14 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
 
     @Override
     public void networkAvailable() {
-        connectionState(ConnectionType.CONNECTED_TO_NETWORK);
-        homePresenter.networkStateChanged(true);
+        runOnUiThread(() -> connectionState(ConnectionType.CONNECTED_TO_NETWORK));
+
     }
 
     @Override
     public void networkUnavailable() {
-        connectionState(ConnectionType.NO_NETWORK_CONNECTION);
-        homePresenter.networkStateChanged(false);
+        runOnUiThread(() -> connectionState(ConnectionType.NO_NETWORK_CONNECTION));
+
     }
 
     @Override
@@ -289,6 +287,19 @@ public class HomeScreenActivity extends BaseMvpActivity implements NavigationVie
     @Override
     public void setBaseData(RefreshData refreshData) {
 
+    }
+
+    @Override
+    public void checkUI(final boolean isConnected) {
+        if (isConnected) {
+            if (connectingToRobotState != ConnectionType.CONNECTED_TO_ROBOT) {
+                homePresenter.resetConnectionState();
+            }
+        } else {
+            if (!(connectingToRobotState == ConnectionType.NO_CONNECTION_TO_ROBOT || connectingToRobotState == ConnectionType.NO_NETWORK_CONNECTION)) {
+                homePresenter.resetConnectionState();
+            }
+        }
     }
 
 }

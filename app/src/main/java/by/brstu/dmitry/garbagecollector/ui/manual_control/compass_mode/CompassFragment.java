@@ -1,5 +1,6 @@
 package by.brstu.dmitry.garbagecollector.ui.manual_control.compass_mode;
 
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,11 +21,12 @@ import by.brstu.dmitry.garbagecollector.application.BaseApplication;
 import by.brstu.dmitry.garbagecollector.application.Constants;
 import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpFragment;
 import by.brstu.dmitry.garbagecollector.ui.compass.CompassCustomView;
+import by.brstu.dmitry.garbagecollector.ui.training.TrainingActivity;
 
 import static android.content.Context.SENSOR_SERVICE;
 
 
-public class CompassFragment extends BaseMvpFragment implements CompassView, SensorEventListener, CompassCustomView.RotationCallback {
+public class CompassFragment extends BaseMvpFragment implements CompassView {
 
     @InjectPresenter
     CompassPresenter presenter;
@@ -62,59 +64,48 @@ public class CompassFragment extends BaseMvpFragment implements CompassView, Sen
     public View onCreateView(final LayoutInflater inflater,
                              @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.fragment_compass, container, false);
     }
 
     @Override
     protected void onViewsBinded() {
-        compassView.setRotationCallback(this);
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+        compassView.setRotationCallback(presenter);
+
+        btnClear.setOnClickListener(view -> compassView.clearLastRotation());
+
+        btnBegin.setOnClickListener(view -> {
+            Intent i = new Intent(getContext(), TrainingActivity.class);
+            startActivity(i);
+        });
+    }
+
+    @Override
+    public void onPause() {
+        stopListening();
+        super.onPause();
+    }
+
+    @Override
+    public void startListening() {
+        mSensorManager.registerListener(presenter,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
                 SensorManager.SENSOR_DELAY_GAME);
-
-        btnClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e("LastRot", compassView.getLastRotation() + "");
-                compassView.clearLastRotation();
-            }
-        });
-
-        btnBegin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.beginStudying(compassView);
-            }
-        });
-
-
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mSensorManager.unregisterListener(this);
+    public void stopListening() {
+        mSensorManager.unregisterListener(presenter);
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
-        float degree = Math.round(event.values[0]);
-        compassView.setCurrentDegree(degree);
+    public void setDataOnCompass(final float degree) {
+        if (compassView != null) {
+            compassView.setCurrentDegree(degree);
+        }
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
-    }
-
-    @Override
-    public void rotationStart() {
-        Log.e("TIME2", "START");
-    }
-
-    @Override
-    public void rotationEnd(final long millis, final float rotation) {
-        Log.e("TIME2", "END");
-        Log.e("TIME2", millis + " " + rotation + "degrees");
+    public void clearRotation() {
+        compassView.clearLastRotation();
     }
 }

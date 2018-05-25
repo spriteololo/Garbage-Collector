@@ -2,9 +2,6 @@ package by.brstu.dmitry.garbagecollector.inject.modules;
 
 import android.support.annotation.NonNull;
 
-
-import java.util.concurrent.TimeUnit;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -27,15 +24,9 @@ public class RetrofitModule {
     @Provides
     @Singleton
     Retrofit provideRetrofit(@NonNull final OkHttpClient okHttpClient) {
-        final OkHttpClient.Builder okHttpBuilder = okHttpClient.newBuilder();
-        okHttpBuilder.connectTimeout(5000, TimeUnit.MILLISECONDS)
-                .readTimeout(5000, TimeUnit.MILLISECONDS)
-                .writeTimeout(5000, TimeUnit.MILLISECONDS)
-                .build();
-
         return new Retrofit.Builder()
                 .baseUrl(BaseUrl)
-                .client(okHttpBuilder.build())
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();

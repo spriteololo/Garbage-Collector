@@ -14,7 +14,7 @@ public class RefreshData {
     }
 
     public void setFrontInfra(final short frontInfra) {
-        this.frontInfra = frontInfra;
+        this.frontInfra = frontInfra == 0 ? 1 : frontInfra;
     }
 
     public short getBackInfra() {
@@ -22,7 +22,7 @@ public class RefreshData {
     }
 
     public void setBackInfra(final short backInfra) {
-        this.backInfra = backInfra;
+        this.backInfra = backInfra == 0 ? 1 : backInfra;
     }
 
     public short getCharge() {

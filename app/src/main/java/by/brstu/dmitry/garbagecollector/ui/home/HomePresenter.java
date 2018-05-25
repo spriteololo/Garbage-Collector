@@ -10,22 +10,23 @@ import by.brstu.dmitry.garbagecollector.application.BaseApplication;
 import by.brstu.dmitry.garbagecollector.application.InternetConnectionState;
 import by.brstu.dmitry.garbagecollector.inject.RequestInterface;
 import by.brstu.dmitry.garbagecollector.ui.all.base.BaseInternetMvpPresenter;
+import io.reactivex.Scheduler;
 
 
 @InjectViewState
 public class HomePresenter extends BaseInternetMvpPresenter<HomeView> implements BaseInternetMvpPresenter.RobotConnectionListener {
 
-    @Inject
-    RequestInterface requestInterface;
 
     @Inject
     Context context;
 
-    private ConnectionToRobot connectionToRobot;
-
     HomePresenter() {
         BaseApplication.getApplicationComponent().inject(this);
+    }
+
+    public void startThreads() {
         setRobotConnectionListener(this);
+        //checkConnection(requestInterface, scheduler);
     }
 
     @Override
@@ -61,23 +62,9 @@ public class HomePresenter extends BaseInternetMvpPresenter<HomeView> implements
         return 1;
     }
 
-    public void networkStateChanged(final boolean b) {
-        if (b) {
-            connectionToRobot = new ConnectionToRobot(requestInterface);
-            connectionToRobot.execute();
-        } else {
-            if(connectionToRobot != null) {
-                connectionToRobot.cancel(false);
-            }
-        }
+    @Override
+    public void checkUI(boolean isConnect) {
+        getViewState().checkUI(isConnect);
     }
 
-    public void networkStateTry() {
-        connection = 0;
-        disconnection = 0;
-        if(connectionToRobot == null) {
-            connectionToRobot = new ConnectionToRobot(requestInterface);
-            connectionToRobot.execute();
-        }
-    }
 }

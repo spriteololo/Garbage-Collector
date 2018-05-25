@@ -6,4 +6,6 @@ import by.brstu.dmitry.garbagecollector.application.InternetConnectionState.Conn
 
 interface HomeView extends MvpView {
     void connectionState(@ConnectionType int connectingToRobot);
+
+    void checkUI(final boolean isConnected);
 }

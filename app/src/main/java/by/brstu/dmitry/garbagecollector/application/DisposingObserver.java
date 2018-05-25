@@ -8,10 +8,10 @@ public class DisposingObserver<T> implements Observer<T> {
     public void onSubscribe(Disposable d) {
     }
 
-    public void addRapid(Disposable d) {
+    protected void addRapid(Disposable d) {
         DisposableManager.addRapid(d);
     }
-    public void addContinuous(Disposable d) {
+    protected void addContinuous(Disposable d) {
         DisposableManager.addContinuous(d);
     }
 

@@ -1,75 +1,85 @@
 package by.brstu.dmitry.garbagecollector.ui.manual_control.compass_mode;
 
-import android.os.AsyncTask;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 
-import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 
-import by.brstu.dmitry.garbagecollector.application.Constants;
-import by.brstu.dmitry.garbagecollector.inject.RequestInterface;
+import by.brstu.dmitry.garbagecollector.application.BaseApplication;
+import by.brstu.dmitry.garbagecollector.application.Constants.DataType;
+import by.brstu.dmitry.garbagecollector.model.homeScreen.ManualControlScreen.OtherManualModes.ICompass;
 import by.brstu.dmitry.garbagecollector.ui.all.base.BaseMvpPresenter;
 import by.brstu.dmitry.garbagecollector.ui.compass.CompassCustomView;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 
 @InjectViewState
-public class CompassPresenter extends BaseMvpPresenter<CompassView> {
+public class CompassPresenter extends BaseMvpPresenter<CompassView> implements SensorEventListener,
+        CompassCustomView.RotationCallback,
+        ICompass.Actions {
 
+    @Inject
+    ICompass interactor;
 
-    public void beginStudying(CompassCustomView compassView) {
-        /*sendRequest()*/
+    CompassPresenter() {
+        BaseApplication.getApplicationComponent().inject(this);
+        interactor.setActions(this);
     }
 
-    protected class Studying extends AsyncTask<Void, Void, Void> {
-        private final RequestInterface requestInterface;
+    private void clearRotation() {
+        getViewState().clearRotation();
+    }
 
-        public Studying(RequestInterface requestInterface) {
-            this.requestInterface = requestInterface;
+    @Override
+    public void rotationStart() {
+        Log.e("TIME2", "START");
+    }
+
+    /*rotation - angle on which it was rotated
+     * millis - time of this rotation*/
+    @Override
+    public void rotationEnd(final long millis, final float rotation) {
+        Log.e("TIME2", millis + " " + rotation + "degrees");
+
+    }
+
+    @Override
+    public void onSensorChanged(final SensorEvent event) {
+        float degree = Math.round(event.values[0]);
+        getViewState().setDataOnCompass(degree);
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    @Override
+    public void onSuccess(Observable<ResponseBody> observable, int type) {
+        switch (type) {
+
+            case DataType.BACK_INFRA:
+                break;
+            case DataType.BASE_DATA:
+                break;
+            case DataType.FRONT_INFRA:
+                break;
+            case DataType.LID_CLOSED:
+                break;
+            case DataType.LID_OPEN:
+                break;
+            case DataType.MOVE_WHEELS:
+                break;
         }
+    }
 
-        @Override
-        protected Void doInBackground(final Void... voids) {
+    @Override
+    public void onError() {
 
-            while (true) {
-                requestInterface.checkConnectionToRobot()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<ResponseBody>() {
-                            @Override
-                            public void onSubscribe(final Disposable d) {
-                            }
-
-                            @Override
-                            public void onNext(final ResponseBody responseBody) {
-                                Log.i("Study", "Next");
-                            }
-
-                            @Override
-                            public void onError(final Throwable e) {
-                                Log.i("Study", "Err");
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-                            }
-                        });
-
-                if(isCancelled()) return null;
-
-                try {
-                    TimeUnit.MILLISECONDS.sleep(Constants.CONNECTION_TO_ROBOT_DELAY_CHECK);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if(isCancelled()) return null;
-            }
-        }
     }
 }

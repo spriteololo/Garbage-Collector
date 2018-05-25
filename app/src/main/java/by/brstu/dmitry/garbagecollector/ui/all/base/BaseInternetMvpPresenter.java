@@ -2,7 +2,6 @@ package by.brstu.dmitry.garbagecollector.ui.all.base;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -10,10 +9,9 @@ import com.arellomobile.mvp.MvpView;
 
 import java.util.concurrent.TimeUnit;
 
-import by.brstu.dmitry.garbagecollector.application.Constants;
 import by.brstu.dmitry.garbagecollector.application.DisposingObserver;
 import by.brstu.dmitry.garbagecollector.inject.RequestInterface;
-import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -21,8 +19,8 @@ import okhttp3.ResponseBody;
 
 public class BaseInternetMvpPresenter<View extends MvpView> extends BaseMvpPresenter<View> {
 
-    protected short connection = 0;
-    protected short disconnection = 0;
+    private short connection = 0;
+    private short disconnection = 0;
     private RobotConnectionListener robotConnectionListener;
 
 
@@ -34,6 +32,11 @@ public class BaseInternetMvpPresenter<View extends MvpView> extends BaseMvpPrese
                 != null && cm.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 
+    public void resetConnectionState() {
+        connection = 0;
+        disconnection = 0;
+    }
+
     public interface RobotConnectionListener {
         short onConnected();
 
@@ -42,66 +45,39 @@ public class BaseInternetMvpPresenter<View extends MvpView> extends BaseMvpPrese
         short onDisconnected();
 
         short onDisconnecting();
+
+        void checkUI(final boolean isConnect);
     }
 
     protected void setRobotConnectionListener(final RobotConnectionListener robotConnectionListener) {
         this.robotConnectionListener = robotConnectionListener;
     }
 
-    protected class ConnectionToRobot extends AsyncTask<Void, Void, Void> {
-        private final RequestInterface requestInterface;
-
-        public ConnectionToRobot(RequestInterface requestInterface) {
-            this.requestInterface = requestInterface;
-        }
-
-        @Override
-        protected Void doInBackground(final Void... voids) {
-
-            while (true) {
-                requestInterface.checkConnectionToRobot()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new DisposingObserver<ResponseBody>() {
-                            @Override
-                            public void onSubscribe(final Disposable d) {
-                                addContinuous(d);
-                            }
-
-                            @Override
-                            public void onNext(final ResponseBody responseBody) {
-                                action(true);
-                                Log.i("Timer", "Next");
-                            }
-
-                            @Override
-                            public void onError(final Throwable e) {
-                                action(false);
-                                Log.i("Timer", "Err");
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-                            }
-                        });
-
-                if(isCancelled() && disconnection > 1) return null;
-
-                try {
-                    TimeUnit.MILLISECONDS.sleep(Constants.CONNECTION_TO_ROBOT_DELAY_CHECK);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if(isCancelled() && disconnection > 1) return null;
-            }
-        }
+    protected void checkConnection(final RequestInterface requestInterface, final Scheduler scheduler) {
+        requestInterface.checkConnectionToRobot()
+                .doOnError(err -> action(false))
+                .observeOn(scheduler)
+                .retryWhen(o -> o.delay( 100, TimeUnit.MILLISECONDS, scheduler))
+                .repeatWhen(o -> o.delay(1000, TimeUnit.MILLISECONDS, scheduler))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(next -> action(true))
+                .subscribe(new DisposingObserver<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(final Disposable d) {
+                        addContinuous(d);
+                    }
+                });
     }
 
-    private void action(final boolean isConnect) {
-        short result = 0;
 
+    public synchronized void action(final boolean isConnect) {
+        short result = 0;
+        if (!isConnect) {
+            Log.i("Timer22", "erroooor");
+        } else {
+            Log.i("Timer22", "next");
+        }
         switch (isConnect ? connection : disconnection) {
             case 0:
                 result += isConnect ? robotConnectionListener.onConnecting() : robotConnectionListener.onDisconnecting();
@@ -110,6 +86,13 @@ public class BaseInternetMvpPresenter<View extends MvpView> extends BaseMvpPrese
                 break;
             case 1:
                 result += isConnect ? robotConnectionListener.onConnected() : robotConnectionListener.onDisconnected();
+                connection = (short) (isConnect ? 1 : 0);
+                disconnection = (short) (isConnect ? 0 : 1);
+
+                break;
+            case 2:
+                robotConnectionListener.checkUI(isConnect);
+                break;
             default:
                 break;
         }

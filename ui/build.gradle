@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
 
     defaultConfig {
         minSdkVersion versions.minSdk
@@ -19,25 +18,26 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Support libs
-    compile libraries.supportAnnotations
-    compile libraries.supportAppCompat
-    compile libraries.supportDesign
-    compile libraries.supportCardView
-    compile libraries.supportRecyclerView
-    compile libraries.supportCardView
-    compile libraries.supportConstraintLayout
+    api libraries.supportAnnotations
+    api libraries.supportAppCompat
+    api libraries.supportDesign
+    api libraries.supportCardView
+    api libraries.supportRecyclerView
+    api libraries.supportCardView
+    api libraries.supportConstraintLayout
 
-    compile libraries.calligraphy
+    api libraries.calligraphy
 
-    compile libraries.skeleton
+    implementation libraries.skeleton
 
-    compile libraries.glide
+    implementation libraries.glide
 
-    compile libraries.realTimeBlur
+    implementation libraries.realTimeBlur
 }

@@ -11,7 +11,7 @@ import android.view.View;
 
 public class CompassCustomView extends View {
 
-    private static final short REFRESH_RATE = 25;
+    private static final short REFRESH_RATE = 75;
     Paint paint;
     RectF rect;
     boolean firstTime = true;

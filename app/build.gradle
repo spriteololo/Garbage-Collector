@@ -3,7 +3,6 @@ apply plugin: 'com.github.ben-manes.versions'
 
 android {
     compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
 
     defaultConfig {
         applicationId versions.appId
@@ -17,6 +16,8 @@ android {
 
         renderscriptTargetApi versions.targetApi
         renderscriptSupportModeEnabled true
+
+
     }
 
     buildTypes {
@@ -25,6 +26,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildToolsVersion '27.0.3'
 }
 
 repositories {
@@ -34,44 +42,44 @@ repositories {
 
 dependencies {
     //UI module
-    compile project(':ui')
+    implementation project(':ui')
 
-    compile libraries.expandableTextView
+    implementation libraries.expandableTextView
 
     //Moxy lib
-    compile libraries.moxy
+    implementation libraries.moxy
     annotationProcessor libraries.moxyCompiler
 
     //Dagger 2 lib
-    compile libraries.dagger
+    implementation libraries.dagger
     annotationProcessor libraries.daggerCompiler
 
     //Retrofit2 lib
-    compile libraries.retrofit
-    compile libraries.retrofitGsonConverter
-    compile libraries.retrofitAdapter
+    implementation libraries.retrofit
+    implementation libraries.retrofitGsonConverter
+    implementation libraries.retrofitAdapter
 
     //ButterKnife lib
-    compile libraries.butterKnife
+    implementation libraries.butterKnife
     annotationProcessor libraries.butterKnifeCompiler
 
     //rxJava/Android
-    compile libraries.rxJava
-    compile libraries.rxAndroid
+    implementation libraries.rxJava
+    implementation libraries.rxAndroid
 
     //circularReveal
-    compile libraries.circularReveal
+    implementation libraries.circularReveal
 
-    compile libraries.glide
+    implementation libraries.glide
     annotationProcessor libraries.glideCompiler
 
     //cicerone
-    compile libraries.cicerone
+    implementation libraries.cicerone
 
     //expandableLayout
-    compile libraries.expandableLayout
+    implementation libraries.expandableLayout
 
-    compile libraries.virtualJoystick
+    implementation libraries.virtualJoystick
 
 
 }

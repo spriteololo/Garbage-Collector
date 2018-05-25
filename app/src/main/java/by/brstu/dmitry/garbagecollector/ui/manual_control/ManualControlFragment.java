@@ -85,13 +85,13 @@ public class ManualControlFragment extends BaseMvpFragment implements ManualCont
 
     @Override
     public void onResume() {
-        manualControlPresenter.startRefresh();
+        manualControlPresenter.checkBaseData();
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        manualControlPresenter.stopRefresh();
+        manualControlPresenter.stopCheckBaseData();
         super.onPause();
     }
 
@@ -108,18 +108,14 @@ public class ManualControlFragment extends BaseMvpFragment implements ManualCont
 
         pagerTab.setGuideline(guideLine);
 
-        lidStateView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                manualControlPresenter.lidOnClick(closed);
-                if (closed) {
-                    lidStateView.setClosed(true);
-                    closed = false;
-                } else {
-                    lidStateView.setClosed(false);
-                    closed = true;
-                }
+        lidStateView.setOnClickListener(view -> {
+            manualControlPresenter.lidOnClick(closed);
+            if (closed) {
+                lidStateView.setClosed(true);
+            } else {
+                lidStateView.setClosed(false);
             }
+            closed = !closed;
         });
     }
 
@@ -152,7 +148,7 @@ public class ManualControlFragment extends BaseMvpFragment implements ManualCont
         temperatureView.setCurrentTemperature(refreshData.getTemperature());
         lidStateView.setClosed(!refreshData.isLidOpen());
         batteryView.setmLevel(refreshData.getCharge());
-        fullnessView.setmLevel(refreshData.getFullness());
+        fullnessView.setmLevel(refreshData.getFullness() * 20);
     }
 
     private class MyAdapter extends FragmentPagerAdapter {
@@ -194,8 +190,5 @@ public class ManualControlFragment extends BaseMvpFragment implements ManualCont
                     return null;
             }
         }
-
     }
-
-
 }

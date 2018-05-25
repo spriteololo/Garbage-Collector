@@ -14,13 +14,18 @@
         android:supportsRtl="true"
         android:theme="@style/GarbageCollectorBaseTheme">
 
-        <activity android:name=".ui.home.HomeScreenActivity">
+        <activity android:name=".ui.home.HomeScreenActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.training.TrainingActivity"
+            android:parentActivityName=".ui.home.HomeScreenActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 

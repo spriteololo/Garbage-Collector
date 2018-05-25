@@ -25,9 +25,9 @@ public class NetworkModule {
     @Singleton
     public OkHttpClient provideOkHttpClient() {
         final OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
-        okHttpBuilder.connectTimeout(timeout, TimeUnit.SECONDS);
-        okHttpBuilder.writeTimeout(timeout, TimeUnit.SECONDS);
-        okHttpBuilder.readTimeout(timeout, TimeUnit.SECONDS);
+        okHttpBuilder.connectTimeout(1000, TimeUnit.MILLISECONDS);
+        okHttpBuilder.writeTimeout(1000, TimeUnit.MILLISECONDS);
+        okHttpBuilder.readTimeout(5000, TimeUnit.MILLISECONDS);
 
         return okHttpBuilder.build();
     }

@@ -36,7 +36,6 @@ public class BaseApplication extends Application {
         initCicerone();
     }
 
-
     private void initApplicationComponent() {
         applicationComponent = DaggerApplicationComponent.builder()
                 .rootModule(new RootModule(getApplicationContext()))

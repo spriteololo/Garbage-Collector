@@ -14,8 +14,11 @@ public interface RequestInterface {
     @GET("m")
     Observable<ResponseBody> forward(@Query("a") int leftDirection, @Query("b") int leftSpeed, @Query("c") int rightDirection, @Query("d") int rightSpeed,  @Query("t") int TIME);
 
+    @GET("f")
+    Observable<ResponseBody> forwardInfra(); //forward sensor
+
     @GET("b")
-    Observable<ResponseBody> backward();
+    Observable<ResponseBody> backwardInfra();
 
     @GET("m")
     Observable<ResponseBody> move(@Query("a") int leftDirection, @Query("b") int leftSpeed, @Query("c") int rightDirection, @Query("d") int rightSpeed,  @Query("t") int TIME);

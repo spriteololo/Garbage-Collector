@@ -2,6 +2,7 @@ package by.brstu.dmitry.garbagecollector.ui.manual_control.stels_mode;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,22 +86,19 @@ public class StelsFragment extends BaseMvpFragment implements ManualControlView,
 
     @Override
     public void onPause() {
-        controlPresenter.stopRefresh();
+        controlPresenter.stopCheckBaseData();
         super.onPause();
     }
 
     @Override
     public void onResume() {
-        controlPresenter.startRefresh();
+        controlPresenter.checkBaseData();
         super.onResume();
     }
 
     @Override
     public void onProgressChanged(final SeekBar seekBar, final int i, final boolean b) {
         presenter.setProgressChange(seekBar.equals(rightBar), i);
-
-        backwardSensor.setInnerRadius(i / (float) seekBar.getMax());
-        forwardSensor.setInnerRadius(i / (float) seekBar.getMax());
     }
 
     @Override
@@ -126,7 +124,15 @@ public class StelsFragment extends BaseMvpFragment implements ManualControlView,
 
     @Override
     public void setBaseData(RefreshData refreshData) {
-        backwardSensor.setInnerRadius(1 / refreshData.getBackInfra());
-        forwardSensor.setInnerRadius(1 / refreshData.getFrontInfra());
+        backwardSensor.setInnerRadius(1 - (refreshData.getBackInfra() - Constants.MINIMUM_DISTANCE_VALUE)/ (Constants.MAXIMUM_DISTANCE_VALUE - Constants.MINIMUM_DISTANCE_VALUE));
+        Log.i("dist_back", refreshData.getBackInfra() + "");
+        forwardSensor.setInnerRadius(1-(refreshData.getFrontInfra() - Constants.MINIMUM_DISTANCE_VALUE)/ (Constants.MAXIMUM_DISTANCE_VALUE - Constants.MINIMUM_DISTANCE_VALUE));
+        Log.i("dist_front", refreshData.getFrontInfra() + "");
+    }
+
+    @Override
+    public void movingAvailability(final boolean availability) {
+        leftBar.setActive(availability);
+        rightBar.setActive(availability);
     }
 }

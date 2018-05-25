@@ -1,8 +1,5 @@
-apply from: 'dependencies.gradle'
-
 buildscript {
     apply from: 'dependencies.gradle'
-
 
     repositories {
         jcenter()
@@ -12,7 +9,13 @@ buildscript {
     dependencies {
         classpath gradlePlugins.android
         classpath gradlePlugins.gradleVersions
+        classpath gradlePlugins.retroLambda
     }
+    apply plugin: 'java'
+}
+
+plugins {
+    id "me.tatarka.retrolambda" version "3.7.0"
 }
 
 allprojects {
@@ -24,6 +27,3 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}

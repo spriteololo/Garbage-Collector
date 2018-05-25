@@ -7,36 +7,43 @@ import okhttp3.ResponseBody;
 
 public class RefreshDataConverter {
     public static RefreshData convertData(ResponseBody responseBody) throws IOException {
-        String[] arr = responseBody.string().split("&");
-        RefreshData refreshData = new RefreshData();
 
-        for(int i = 0; i< arr.length; i++) {
-            short num = getNum(arr[i]);
-            switch (i) {
-                case 0: refreshData.setFrontInfra(num);
-                    break;
-                case 1: refreshData.setBackInfra(num);
-                    break;
-                case 2: refreshData.setCharge(num);
-                    break;
-                case 3: refreshData.setTemperature(num);
-                    break;
-                case 4: refreshData.setFullness(num);
-                    break;
-                case 5: refreshData.setMotorWork(num == 1);
-                    break;
-                case 6: refreshData.setLidOpen(num == 1);
-                    break;
-            }
-        }
+        RefreshData refreshData = new RefreshData();
+        String source = responseBody.string();
+
+        refreshData.setFrontInfra(getNumByString(source, "frir"));
+
+        refreshData.setBackInfra(getNumByString(source, "bkir"));
+
+        refreshData.setCharge(getNumByString(source, "chr"));
+
+        refreshData.setTemperature(getNumByString(source, "tmp"));
+
+        refreshData.setFullness(getNumByString(source, "ful"));
+
+        refreshData.setMotorWork(getNumByString(source, "mtr") == 1);
+
+        refreshData.setLidOpen(getNumByString(source, "bin") == 1);
+
+
         return refreshData;
     }
 
-    private static short getNum(String string) {
-
-        for (int i = 0; i < string.length(); i++) {
-            string = string.replaceAll("[^0-9]+", "");
+    private static short getNumByString(String input, String pattern) {
+        if (input.contains(pattern)) {
+            int start = input.indexOf(pattern) + pattern.length() + 1;
+            char array[] = input.substring(start).toCharArray();
+            final StringBuilder strb = new StringBuilder();
+            for (char ch : array) {
+                if (Character.isDigit(ch)) {
+                    strb.append(ch);
+                } else {
+                    return Short.parseShort(strb.toString());
+                }
+            }
+            return Short.parseShort(strb.toString());
+        } else {
+            return -1;
         }
-        return Short.parseShort(string);
     }
 }

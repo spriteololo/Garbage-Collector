@@ -13,7 +13,11 @@ public class DisposableManager {
     }
 
     public static void disposeContinuous() {
-        getCompositeDisposableForContinuousTasks().dispose();
+        try {
+            getCompositeDisposableForContinuousTasks().dispose();
+        } catch (Exception ignored) {
+
+        }
     }
 
     private static CompositeDisposable getCompositeDisposableForContinuousTasks() {
@@ -24,19 +28,31 @@ public class DisposableManager {
     }
 
     static void addRapid(Disposable disposable) {
-        getCompositeDisposableForRapidTasks().add(disposable);
+        if (disposable != null) {
+            getCompositeDisposableForRapidTasks().add(disposable);
+        }
     }
 
     public static void disposeRapid() {
-        getCompositeDisposableForRapidTasks().dispose();
+        try {
+            getCompositeDisposableForRapidTasks().dispose();
+        } catch (Exception ignored) {
+
+        }
     }
 
     private static CompositeDisposable getCompositeDisposableForRapidTasks() {
-        if (compositeDisposableForRapidTasks == null || compositeDisposableForRapidTasks.isDisposed()) {
+        if (compositeDisposableForRapidTasks == null) {
             compositeDisposableForRapidTasks = new CompositeDisposable();
         }
-        return compositeDisposableForContinuousTasks;
+        return compositeDisposableForRapidTasks;
     }
 
-    private DisposableManager() {}
+    private DisposableManager() {
+    }
+
+    public static void disposeAll() {
+        disposeContinuous();
+        disposeRapid();
+    }
 }

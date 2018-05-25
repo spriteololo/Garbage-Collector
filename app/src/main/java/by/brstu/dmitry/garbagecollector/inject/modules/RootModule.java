@@ -15,7 +15,7 @@ import okhttp3.OkHttpClient;
 @Module
 public class RootModule {
 
-    private Context context;
+    private final Context context;
 
     public RootModule(@NonNull final Context context) {
         this.context = context;

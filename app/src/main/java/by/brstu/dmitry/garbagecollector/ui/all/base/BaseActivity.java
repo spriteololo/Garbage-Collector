@@ -16,6 +16,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
+    @ConnectionType protected int connectingToRobotState;
+
     @Override
     public void setContentView(final int layoutResID) {
         super.setContentView(layoutResID);
@@ -72,11 +74,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void onViewsBinded();
 
     public void connectionState(@ConnectionType final int connectingToRobotState) {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setBackgroundDrawable(createGradient(connectingToRobotState));
-            getSupportActionBar().setSubtitle(getResources().getString(connectingToRobotState));
-        }
-
+        runOnUiThread(() -> {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setBackgroundDrawable(createGradient(connectingToRobotState));
+                getSupportActionBar().setSubtitle(getResources().getString(connectingToRobotState));
+            }
+        });
+        this.connectingToRobotState = connectingToRobotState;
     }
 
     private GradientDrawable createGradient(@ConnectionType final int type) {

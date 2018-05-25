@@ -7,12 +7,13 @@ ext.versions = [
         targetSdk               : 26,
         compileSdk              : 26,
         targetApi               : 19,
-        buildTools              : '26.0.2',
+        buildTools              : '27.0.1',
 
-        androidGradlePlugin     : '3.0.0',
-        gradleVersionsPlugin    : '0.14.0',
+        androidGradlePlugin     : '3.1.2',
+        gradleVersionsPlugin    : '0.17.0',
+        gradleRetroLambda       : '3.7.0',
 
-        supportLibs             : '26.0.2',
+        supportLibs             : '27.0.1',
         supportConstraintLayout : '1.0.2',
 
         expandableTextView      : '1.0.3',
@@ -49,7 +50,8 @@ ext.versions = [
 
 ext.gradlePlugins = [
         android                 : "com.android.tools.build:gradle:$versions.androidGradlePlugin",
-        gradleVersions          : "com.github.ben-manes:gradle-versions-plugin:$versions.gradleVersionsPlugin"
+        gradleVersions          : "com.github.ben-manes:gradle-versions-plugin:$versions.gradleVersionsPlugin",
+        retroLambda             : "me.tatarka:gradle-retrolambda:$versions.gradleRetroLambda"
 ]
 
 ext.libraries = [
